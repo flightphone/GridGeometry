@@ -1,4 +1,5 @@
 let active;
+let treeMap = new Map();
 
 
 function clickTree(e, callback = (l)=>{})
@@ -79,6 +80,7 @@ function dfs(elTree, elHTML)
 
 
         sp0.className = "fancytree-node fancytree-exp-n fancytree-ico-c";
+        treeMap.set(idmenu.value, {link1: link1.value, params: params.value})
     }
     elHTML.appendChild(li);
 }
@@ -98,4 +100,4 @@ function CreateTreeTree(element=document.getElementById('tree'), data = [], call
     element.appendChild(root);
 }
 
-export {CreateTreeTree}
+export {CreateTreeTree, treeMap}

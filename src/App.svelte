@@ -1,7 +1,7 @@
 <script>
   import "./css/skin-win8/ui.fancytree.css";
   import "./lib/MonoGrid.svelte";
-  import { CreateTreeTree } from "./models/TreeCore";
+  import { CreateTreeTree, treeMap } from "./models/TreeCore";
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
   import NotReal from "./lib/NotReal.svelte";
@@ -55,6 +55,11 @@
     const res = await fetch(url);
     const data = await res.json();
     CreateTreeTree(treediv, data, openItem);
+    const loc = new URL(document.URL);
+    let startid = loc.pathname.replace('/', '');
+    let startobj = treeMap.get(startid);
+    if (startobj)
+      mainObj.open(startid, startobj.link1, startobj.params);
   });
 </script>
 
