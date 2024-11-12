@@ -11,14 +11,15 @@ let mainObj = {
         return null;
     },
 
-    activate: () => {},
+    activate: () => { },
 
     open: (id, link1, params, extparams = {}) => {
         if (!openMap.get(id)) {
+            extparams.id = id;
             let c = mainObj.getForm(id, link1, params);
             if (c === "not implemented")
                 return;
-                
+
             let obj = {
                 Control: c,
                 IdDeclare: params,
@@ -34,8 +35,18 @@ let mainObj = {
         mainObj.activate();
     },
 
-    alert: (text, title="message") => {alert(text);}, 
-    confirm: (text, title="question") => { return confirm(text); },
+    alert: (text, title = "message") => { alert(text); },
+    confirm: (text, title = "question") => { return confirm(text); },
+    alarm: (method, param) => {
+        openMap.forEach((value) => {
+            let m = value[method];
+            if (m) {
+                m(param);
+            }
+        });
+    },
+
+    sheme: "ag-theme-balham-dark",
     
     dateformat: function (d, f) {
         if (d == null)

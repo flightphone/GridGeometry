@@ -2,7 +2,7 @@
   import "ag-grid-community/styles/ag-grid.css";
   import "ag-grid-community/styles/ag-theme-balham.css";
   import { GridGeometry } from "../models/GridGeometry";
-  import { mainObj } from "../store";
+  import { mainObj, openMap } from "../store";
   import { onMount } from "svelte";
 
   let { IdDeclare, extparams } = $props();
@@ -15,6 +15,15 @@
   let EditProc = $state(false);
   let KeyValue = $state(false);
   let IdDeclareSet = $state(false);
+
+  //console.log(extparams.id);
+  
+  openMap.get(extparams.id).toggle_shema = ()=> {
+    adiv.classList.toggle("ag-theme-balham-dark");
+    adiv.classList.toggle("ag-theme-balham");
+  }
+  
+
   onMount(async () => {
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
     await agrid.start();
@@ -108,5 +117,5 @@
     </div>
   </div>
 
-  <div bind:this={adiv} class="ag-theme-balham-dark" style="flex-grow: 1"></div>
+  <div bind:this={adiv} class="{mainObj.sheme}" style="flex-grow: 1"></div>
 </div>

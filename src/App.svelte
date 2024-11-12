@@ -28,6 +28,8 @@
   {
     mode = (mode == "wb_sunny") ? "brightness_2" : "wb_sunny";
     document.querySelector("BODY").classList.toggle("dark");
+    mainObj.sheme = (mainObj.sheme == "ag-theme-balham-dark")?"ag-theme-balham":"ag-theme-balham-dark";
+    mainObj.alarm("toggle_shema");
   }
 
   mainObj.getForm = (id, link1, params) => {
@@ -49,7 +51,7 @@
     let id = e.getAttribute("idmenu");
     let link1 = e.getAttribute("link1");
     let params = e.getAttribute("params");
-    mainObj.open(id, link1, params);
+    mainObj.open(id, link1, params, {});
   }
 
   onMount(async () => {
