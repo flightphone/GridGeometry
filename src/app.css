@@ -56,6 +56,11 @@
   color:  var(--dark-color);
 }
 
+.dark .darkop
+{
+  opacity: 0.5;
+}
+
 .dark i
 {
   background-color: var(--dark-button);

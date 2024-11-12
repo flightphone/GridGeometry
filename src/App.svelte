@@ -4,7 +4,7 @@
   import { CreateTreeTree, treeMap } from "./models/TreeCore";
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
-  import NotReal from "./lib/NotReal.svelte";
+  import Dogovors from "./lib/Dogovors.svelte";
   import { mainObj, openMap, openIDs } from './store';
   
   let dialog;
@@ -31,10 +31,12 @@
   }
 
   mainObj.getForm = (id, link1, params) => {
+    if (link1=="RegulationPrint.Dgs.DogovorList")
+      return Dogovors;
     if (params)
       return MonoGrid;
     else
-      return NotReal;  
+      return "not implemented";  
   }
   mainObj.activate = () => {
     currentActive = mainObj.current;
@@ -55,8 +57,7 @@
     const res = await fetch(url);
     const data = await res.json();
     CreateTreeTree(treediv, data, openItem);
-    const loc = new URL(document.URL);
-    let startid = loc.pathname.replace('/', '');
+    let startid = window.location.hash.replace("#", "");
     let startobj = treeMap.get(startid);
     if (startobj)
       mainObj.open(startid, startobj.link1, startobj.params);
@@ -65,12 +66,12 @@
 
 <main>
 <div class="menubut">
-  <button class="mdl-button mdl-js-button mdl-button--fab" on:click={openModal}>
+  <button class="mdl-button mdl-js-button mdl-button--fab darkop" on:click={openModal}>
     <i class="material-icons">menu</i>
   </button>
 </div>  
 <div class="menubut2">
-  <button class="mdl-button mdl-js-button mdl-button--fab" on:click={togleMode}>
+  <button class="mdl-button mdl-js-button mdl-button--fab darkop" on:click={togleMode}>
     <i class="material-icons">{mode}</i>
   </button>
 </div>  

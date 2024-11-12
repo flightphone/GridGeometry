@@ -12,6 +12,11 @@ class GridGeometry {
                 enableClickSelection: true,
             },
 
+            onRowSelected: (ev) => {
+                if (this.extparams.onSelect)
+                    this.extparams.onSelect(ev);
+            },
+
             defaultColDef: {
                 sortable: true,
                 filter: true,
@@ -109,28 +114,30 @@ class GridGeometry {
 
     openDetail = () => {
         let rs = this.gridApi.getSelectedNodes();
-        if (!rs[0])
-        {
+        if (!rs[0]) {
             mainObj.alert('not selected row');
             return;
-        }    
-        
+        }
+
         let rw = rs[0].data;
         let val = rw[this.mid.KeyF];
         let TextParams = {};
         TextParams[this.mid.KeyF] = val;
         let iddeclare = this.mid.KeyValue;
         let title = rw[this.mid.DispField] + ' (detail) ';
-        let newid = this.idDeclare+"_"+rw[this.mid.KeyF];
-        mainObj.open(newid, "Bureau.Finder", iddeclare, {TextParams:TextParams, title:title});
-      };
+        let newid = this.idDeclare + "_" + rw[this.mid.KeyF];
+        mainObj.open(newid, "Bureau.Finder", iddeclare, { TextParams: TextParams, title: title });
+    };
 
     rowDelete = () => {
-        /*
-        let rw = this.gridApi.getSelectedNodes();
-        if (rw)
-            alert(rw[0].data["AL_UTG"]);
-        */
+        let rs = this.gridApi.getSelectedNodes();
+        if (!rs[0]) {
+            mainObj.alert('not selected row');
+            return;
+        }
+        let rw = rs[0].data;
+        let text = `delete record "${rw[this.mid.DispField]}"?`;
+        let dires = mainObj.confirm(text);
     }
 
     exportCsv = () => {

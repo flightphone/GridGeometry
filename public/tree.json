@@ -1,12 +1,12 @@
 [
     {
-        "id": "81",
+        "id": "840",
         "text": "Карточки рейсов",
         "children": null,
         "iconCls": "tree-21",
         "attributes": {
             "link1": "RegulationPrint.FlightCardsList",
-            "params": "134"
+            "params": "1451"
         },
         "state": null
     },

@@ -10,7 +10,7 @@
 
   let adiv;
   let agrid;
-  let Descr = $state("load...");
+  let Descr = $state("loading...");
   let DelProc = $state(false);
   let EditProc = $state(false);
   let KeyValue = $state(false);
@@ -30,6 +30,7 @@
     EditProc = agrid.mid.EditProc;
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
+    
   });
 </script>
 
@@ -38,6 +39,9 @@
     <h5 style="flex-grow: 1; margin-left: 20px;">
       {Descr}
     </h5>
+    <slot>
+
+    </slot>
     {#if DelProc}
       <div class="but">
         <button

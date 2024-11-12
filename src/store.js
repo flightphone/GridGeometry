@@ -16,6 +16,9 @@ let mainObj = {
     open: (id, link1, params, extparams = {}) => {
         if (!openMap.get(id)) {
             let c = mainObj.getForm(id, link1, params);
+            if (c === "not implemented")
+                return;
+                
             let obj = {
                 Control: c,
                 IdDeclare: params,
@@ -32,6 +35,7 @@ let mainObj = {
     },
 
     alert: (text, title="message") => {alert(text);}, 
+    confirm: (text, title="question") => { return confirm(text); },
     
     dateformat: function (d, f) {
         if (d == null)
