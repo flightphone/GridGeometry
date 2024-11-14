@@ -6,7 +6,6 @@
   import { onMount } from "svelte";
 
   let { IdDeclare, extparams } = $props();
-  
 
   let adiv;
   let agrid;
@@ -17,12 +16,11 @@
   let IdDeclareSet = $state(false);
 
   //console.log(extparams.id);
-  
-  openMap.get(extparams.id).toggle_shema = ()=> {
+
+  openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
     adiv.classList.toggle("ag-theme-balham");
-  }
-  
+  };
 
   onMount(async () => {
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
@@ -39,7 +37,6 @@
     EditProc = agrid.mid.EditProc;
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
-    
   });
 </script>
 
@@ -48,12 +45,12 @@
     <h5 style="flex-grow: 1; margin-left: 20px;">
       {Descr}
     </h5>
-    <slot>
 
-    </slot>
+    
+    <slot></slot>
     {#if DelProc}
-      <div class="but">
-        <button
+      <div class="but" title="add record">
+        <button 
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">add</i>
@@ -61,7 +58,7 @@
       </div>
     {/if}
     {#if EditProc}
-      <div class="but">
+      <div class="but" title="edit record">
         <button
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
@@ -70,7 +67,7 @@
       </div>
     {/if}
     {#if DelProc}
-      <div class="but">
+      <div class="but"  title="delete record">
         <button
           on:click={agrid.rowDelete}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -79,7 +76,7 @@
         </button>
       </div>
     {/if}
-    <div class="but">
+    <div class="but"  title="refresh">
       <button
         on:click={agrid.updateTab}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -88,8 +85,9 @@
       </button>
     </div>
     {#if KeyValue}
-      <div class="but">
-        <button on:click={agrid.openDetail}
+      <div class="but"  title="detail">
+        <button
+          on:click={agrid.openDetail}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">details</i>
@@ -98,8 +96,8 @@
     {/if}
 
     {#if IdDeclareSet}
-      <div class="but">
-        <button 
+      <div class="but"  title="settings">
+        <button
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">settings</i>
@@ -107,7 +105,7 @@
       </div>
     {/if}
 
-    <div class="but">
+    <div class="but" title="export csv">
       <button
         on:click={agrid.exportCsv}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -117,5 +115,5 @@
     </div>
   </div>
 
-  <div bind:this={adiv} class="{mainObj.sheme}" style="flex-grow: 1"></div>
+  <div bind:this={adiv} class={mainObj.sheme} style="flex-grow: 1"></div>
 </div>

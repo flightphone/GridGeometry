@@ -17,6 +17,14 @@ class GridGeometry {
                     this.extparams.onSelect(ev);
             },
 
+            onCellFocused: (e) => {
+                //console.log(e);
+                //current = e; currentI = current.rowIndex;
+                //let rw = gridApi.rowModel.rowsToDisplay[e.rowIndex];
+                let rw = e.api.getRowNode(e.rowIndex);
+                rw.setSelected(true);
+            },
+
             defaultColDef: {
                 sortable: true,
                 filter: true,

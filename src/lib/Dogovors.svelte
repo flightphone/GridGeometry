@@ -15,7 +15,7 @@
 </script>
 <a bind:this={href} href={url} style="display: none;" target = "_blank"></a>
 <MonoGrid IdDeclare="1445" extparams={extparams}>
-    <div class="but">
+    <div class="but" title="files">
         <button on:click={attach}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
