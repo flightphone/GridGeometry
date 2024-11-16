@@ -1,89 +1,40 @@
 <script>
   import "../css/lil-gui.css";
+  import { Editor } from "../models/Editor";
+  import { onMount } from "svelte";
+  let gu;
+  let description = $state("");
+  let ed;
+  let manager = {
+    onclick: (e) => {
+      description = e;
+    }
+  };
+
+  
+/*
+  let change = (e) => {
+    //alert(e.target.tagName);
+    let el = e.target;
+    let ht = el.parentElement.querySelector(".display");
+    if (ht) ht.innerHTML = e.target.value;
+  };
+  */
+  onMount(async () => {
+    const url = "/Finder.json";
+    const res = await fetch(url);
+    const data = await res.json();
+    ed = new Editor(data.ReferEdit, gu, manager)
+    
+  });
 </script>
 
-<div class="lil-gui root allow-touch-styles autoPlace" style="width:400px">
-  <!--<button class="title" aria-expanded="true">Controls</button>-->
-  <!--<div class="children">-->
-    <div class="lil-gui">
-      <button class="title" aria-expanded="true">Folder</button>
-      <div class="children" style="">
-        <div class="controller number">
-          <div class="name" id="lil-gui-name-1">number</div>
-          <div class="widget">
-            
-            <input type="text" aria-labelledby="lil-gui-name-1" />
-          </div>
-        </div>
-        <label class="controller boolean"
-          ><div class="name" id="lil-gui-name-2">boolean</div>
-          <div class="widget">
-            <input type="checkbox" aria-labelledby="lil-gui-name-2" />
-          </div></label
-        >
-       
-      </div>
-    </div>
-    <div class="controller option">
-      <div class="name" id="lil-gui-name-5">options</div>
-      <div class="widget">
-        <select aria-labelledby="lil-gui-name-5" 
-          ><option>Small</option><option>Medium</option><option>Large</option
-          ></select
-        >
-        <div class="display" style="width: 100%;">Medium</div>
-      </div>
-    </div>
-
-    <div class="controller option">
-      <div class="name" id="lil-gui-name-5">Airlines</div>
-      <div class="widget">
-        <div class="display" style="width: 100%;">UTA</div>
-      </div>
-    </div>
-
-    <label class="controller boolean"
-      ><div class="name" id="lil-gui-name-6">boolean</div>
-      <div class="widget">
-        <input type="checkbox" aria-labelledby="lil-gui-name-6" />
-      </div></label
-    >
-    <div class="controller string">
-      <div class="name" id="lil-gui-name-7">string</div>
-      <div class="widget">
-        <input
-          type="text"
-          spellcheck="false"
-          aria-labelledby="lil-gui-name-7"
-        />
-      </div>
-    </div>
-
-    <div class="controller string">
-        <div class="name" id="lil-gui-name-7">Date</div>
-        <div class="widget">
-          <input
-            type="datetime-local"
-            spellcheck="false"
-            aria-labelledby="lil-gui-name-7"
-          />
-        </div>
-      </div>
-
-    <div class="controller number">
-      <div class="name" id="lil-gui-name-8">number</div>
-      <div class="widget">
-        <input type="text" aria-labelledby="lil-gui-name-8" />
-      </div>
-    </div>
-    
-    <div class="controller function">
-        <div class="widget">
-          <button><div class="name" id="lil-gui-name-10">Ok</div></button
-          >
-          <button><div class="name" id="lil-gui-name-10">Cancel</div></button
-            >
-        </div>
-      </div>
-  <!--</div>-->
+<div class="lil-out autoPlace" style="width: 600px;" >
+  <div
+    bind:this={gu} style="height:400px;border: 1px solid gray;"
+  >
+  </div>
+  <div class="lil-gui description">
+    {description}
+  </div>
 </div>
