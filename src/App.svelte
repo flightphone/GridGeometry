@@ -5,10 +5,7 @@
   import MonoGrid from "./lib/MonoGrid.svelte";
   import Dogovors from "./lib/Dogovors.svelte";
   import { mainObj, openMap, openIDs } from "./store";
-  import { Editor } from "./models/Editor";
-  import { ModalDialog } from "./models/ModalDialog";
-  import LilGui from "./lib/LilGui.svelte";
-
+  
   let dialog;
   let treediv;
   let mode = "wb_sunny"; //"brightness_2";
