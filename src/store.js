@@ -5,6 +5,7 @@ let openMap = new Map();
 let openIDs = []
 
 let mainObj = {
+    jsonData: false,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {
@@ -29,7 +30,7 @@ let mainObj = {
             openIDs.push(id);
         } else if (openMap.get(id).activate) openMap.get(id).activate();
         mainObj.current = id;
-        //25.05.2022 история по якорям
+        //25.05.2022 history
         window.location.hash = id;
         //11.11.2024
         mainObj.activate();
@@ -83,7 +84,7 @@ let mainObj = {
     }
 }
 
-//история переходов
+//history transfer
 window.addEventListener(
     "popstate",
     function () {

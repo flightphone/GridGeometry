@@ -5,12 +5,11 @@
   import MonoGrid from "./lib/MonoGrid.svelte";
   import Dogovors from "./lib/Dogovors.svelte";
   import { mainObj, openMap, openIDs } from "./store";
-  
+
   let dialog;
   let treediv;
   let mode = "wb_sunny"; //"brightness_2";
-  let title = "Главное меню";
-
+  let title = "Main Menu";
 
   let currentActive = "-1";
   let opens = [];
@@ -19,13 +18,9 @@
     dialog.showModal();
   }
 
-  
-
   function closeModal() {
     dialog.close();
   }
-
-  
 
   function togleMode() {
     mode = mode == "wb_sunny" ? "brightness_2" : "wb_sunny";
@@ -56,14 +51,16 @@
   }
 
   onMount(async () => {
-    const url = "/tree.json";
+    let url = mainObj.baseUrl + "ustore/gettree";
+    if (mainObj.jsonData)
+      url = "/gettree.json";
+
     const res = await fetch(url);
     const data = await res.json();
     CreateTreeTree(treediv, data, openItem);
     let startid = window.location.hash.replace("#", "");
     let startobj = treeMap.get(startid);
     if (startobj) mainObj.open(startid, startobj.link1, startobj.params);
-    
   });
 </script>
 
@@ -85,7 +82,6 @@
     </button>
   </div>
 
-
   <dialog bind:this={dialog} class="modal">
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"
@@ -102,7 +98,7 @@
 
       <div
         bind:this={treediv}
-        style="flex-grow: 1; overflow-y: auto;height:400px;width:100%"
+        style="flex-grow: 1; overflow-y: auto;height:400px;width:100%; margin:5px;border 1px solid lightgray;"
       ></div>
 
       <div
@@ -120,8 +116,7 @@
       </div>
     </div>
   </dialog>
-  <!--<LilGui/>-->
-
+  
 
   {#each opens as e}
     <div hidden={e != currentActive}>

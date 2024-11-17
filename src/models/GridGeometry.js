@@ -51,22 +51,27 @@ class GridGeometry {
 
     start = async () => {
         try {
-            //const response = await fetch("/Finder.json");
-            //const response = await fetch(url);
-            const url = `${mainObj.baseUrl}React/FinderStart`;
-            const bd = new FormData();
-            bd.append("id", this.idDeclare);
-            bd.append("mode", "new");
-            if (this.extparams.SQLParams) bd.append("SQLParams", JSON.stringify(this.extparams.SQLParams));
-            if (this.extparams.TextParams) bd.append("TextParams", JSON.stringify(this.extparams.TextParams));
+            if (mainObj.jsonData) {
+                const url = `/FinderStart${this.idDeclare}.json`;
+                const response = await fetch(url);
+                this.mid = await response.json();
+            }
+            else {
+                const url = `${mainObj.baseUrl}React/FinderStart`;
+                const bd = new FormData();
+                bd.append("id", this.idDeclare);
+                bd.append("mode", "new");
+                if (this.extparams.SQLParams) bd.append("SQLParams", JSON.stringify(this.extparams.SQLParams));
+                if (this.extparams.TextParams) bd.append("TextParams", JSON.stringify(this.extparams.TextParams));
 
-            const response = await fetch(url, {
-                method: "POST",
-                body: bd,
-                cache: "no-cache",
-                //credentials: "include",
-            });
-            this.mid = await response.json();
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: bd,
+                    cache: "no-cache",
+                    //credentials: "include",
+                });
+                this.mid = await response.json();
+            }
         }
         catch (err) {
             this.mid = { Error: err.toString() };
@@ -88,6 +93,8 @@ class GridGeometry {
         try {
             //const response = await fetch("/Finder.json");
             //const response = await fetch(url);
+            if (mainObj.jsonData)
+                return;
             this.gridApi.setGridOption("rowData", []);
             const url = `${mainObj.baseUrl}React/FinderStart`;
             const bd = new FormData();
