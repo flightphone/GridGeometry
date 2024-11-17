@@ -1,16 +1,19 @@
+import { creatediv } from "../store";
+import { ModalDialog } from "./ModalDialog";
+import { GridGeometry } from "./GridGeometry";
+import { mainObj } from "../store";
+
+
 class Editor {
-
-    
-
     constructor(ReferEdit, element, manager = {}) {
-        
+
         let change = (e) => {
             let el = e.target;
             let ht = el.parentElement.querySelector(".display");
             let sel = e.target;
             if (ht) ht.innerHTML = sel.options[sel.selectedIndex].text;
         };
-    
+
         let click = (e) => {
             let description;
             let el = e.target;
@@ -21,7 +24,7 @@ class Editor {
             } else description = "";
             if (manager.onclick)
                 manager.onclick(description);
-    
+
             if (el.tagName == "BUTTON") el.parentElement.classList.toggle("closed");
             if (el.className == "name") {
                 let ht = el.parentElement.querySelector("INPUT");
@@ -35,16 +38,21 @@ class Editor {
                     return;
                 }
             }
-            if (el.className == "widget")
-            {
+            if (el.className == "widget") {
                 //finder!!!
                 let ht = el.querySelector("INPUT");
                 if (ht) {
                     ht.focus();
+                    openfinder(ht);
                     return;
                 }
             }
         };
+
+        let openfinder = (ht) => {
+            ht.dialog.showModal();
+            //ht.cnt.classList.toggle("winhide");
+        }
 
 
 
@@ -54,7 +62,10 @@ class Editor {
         let classname;
         let root = creatediv("lil-gui root", element);
         let children = creatediv("children", root);
+
         ReferEdit.Editors.forEach(column => {
+            let inp;
+
             let classController = "controller string";
             if (column.joinRow && column.joinRow.classname) {
                 classController = "controller option";
@@ -68,13 +79,14 @@ class Editor {
             name.innerText = column.FieldCaption;
             let widget = creatediv("widget", controller);
             if (classController == "controller string") {
-                let inp = creatediv("", widget, "INPUT");
+                inp = creatediv("", widget, "INPUT");
                 let typ = "text";
                 if (column.DisplayFormat == "dd.MM.yyyy")
                     typ = "date"
                 inp.setAttribute("type", typ);
                 inp.setAttribute("spellcheck", "false");
             }
+
             if (classController == "controller option") {
                 let classdisplay = "finder";
                 if (classname == "Bureau.GridCombo") {
@@ -87,148 +99,45 @@ class Editor {
                         opt.text = e[column.joinRow.FindConrol.DispField]
                     });
                 }
-                else
-                {
-                    let inp = creatediv("", widget, "INPUT");
-                    inp.style.width = "0px";
-                    inp.onkeydown = (event) => {if (event.keyCode == 13) alert('aa')};
-                }
-                let display = creatediv(classdisplay, widget);
+                else {
 
+                    inp = creatediv("", widget, "INPUT");
+                    inp.style.width = "0px";
+                    inp.onkeydown = (event) => { if (event.keyCode == 13) openfinder(inp) };
+                }
+
+                let display = creatediv(classdisplay, widget);
+                if (classname == "Bureau.Finder") {
+
+                    const cnt = document.createElement("div"); //creatediv(mainObj.sheme, document.querySelector("main"));
+                    cnt.style.width = "100%";
+                    cnt.style.height = "100%";
+                    cnt.className = mainObj.sheme;
+                    let grid = new GridGeometry(column.joinRow.IdDeclare, cnt, {});
+                    grid.mid = column.joinRow.FindConrol;
+                    grid.init();
+                    grid.updateTab();
+                    let dialog;
+                    let okfun = () => {
+                        let rs = grid.gridApi.getSelectedNodes();
+                        if (!rs[0]) {
+                            mainObj.alert('not selected row');
+                            return;
+                        }
+                        let rw = rs[0].data;
+                        let val = rw[grid.mid.KeyF];
+                        let title = rw[grid.mid.DispField];
+                        display.textContent = title;
+                        dialog.close();
+                    }
+                    dialog = new ModalDialog(500, 800, okfun);
+                    dialog.content.appendChild(cnt);
+                    inp.dialog = dialog;
+                }
             }
         });
-        //console.log(root.innerHTML);
-        let innerHTML = `
-        <div class="lil-gui root">
-        <div class="children">
-      <div class="lil-gui">
-        <button class="title" aria-expanded="false">Folder</button>
-        <div class="children" style="">
-          <div class="controller string">
-            <div class="name" id="lil-gui-name-7">string</div>
-            <div class="widget">
-              <input
-                type="text"
-                spellcheck="false"
-                aria-labelledby="lil-gui-name-7"
-              />
-            </div>
-          </div>
-          <div class="controller string">
-            <div class="name" id="lil-gui-name-7">string</div>
-            <div class="widget">
-              <input
-                type="date"
-                spellcheck="false"
-                aria-labelledby="lil-gui-name-7"
-              />
-            </div>
-          </div>
-          <label class="controller boolean"
-            ><div class="name" id="lil-gui-name-2">boolean</div>
-            <div class="widget">
-              <input type="checkbox" aria-labelledby="lil-gui-name-2" />
-            </div></label
-          >
-
-          <div class="lil-gui">
-            <button class="title" aria-expanded="false" style=""
-              >Sub Folder</button
-            >
-            <div class="children" style="">
-              <div class="controller string">
-                <div class="name" id="lil-gui-name-7">string</div>
-                <div class="widget">
-                  <input
-                    type="text"
-                    spellcheck="false"
-                    aria-labelledby="lil-gui-name-7"
-                  />
-                </div>
-              </div>
-              <div class="controller string selected">
-                <div class="name" id="lil-gui-name-7">string</div>
-                <div class="widget">
-                  <input
-                    type="date"
-                    spellcheck="false"
-                    aria-labelledby="lil-gui-name-7"
-                  />
-                </div>
-              </div>
-              <label class="controller boolean"
-                ><div class="name" id="lil-gui-name-2">boolean</div>
-                <div class="widget">
-                  <input type="checkbox" aria-labelledby="lil-gui-name-2" />
-                </div></label
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="controller option">
-        <div class="name" id="lil-gui-name-5">options</div>
-        <div class="widget">
-          <select on:change={change} aria-labelledby="lil-gui-name-5"
-            ><option>Small</option><option>Medium</option><option>Large</option
-            ></select
-          >
-          <div class="display">Small</div>
-        </div>
-      </div>
-      <label class="controller boolean"
-        ><div class="name" id="lil-gui-name-6">boolean</div>
-        <div class="widget">
-          <input type="checkbox" aria-labelledby="lil-gui-name-6" />
-        </div></label
-      >
-      <div class="controller string">
-        <div class="name" id="lil-gui-name-7">string</div>
-        <div class="widget">
-          <input
-            type="text"
-            spellcheck="false"
-            aria-labelledby="lil-gui-name-7"
-          />
-        </div>
-      </div>
-      <div class="controller string">
-        <div class="name" id="lil-gui-name-7">string</div>
-        <div class="widget">
-          <input
-            type="text"
-            spellcheck="false"
-            aria-labelledby="lil-gui-name-7"
-          />
-        </div>
-      </div>
-      <div class="controller string">
-        <div class="name" id="lil-gui-name-7">string</div>
-        <div class="widget">
-          <input
-            type="text"
-            spellcheck="false"
-            aria-labelledby="lil-gui-name-7"
-          />
-        </div>
-      </div>
-      <div class="controller number">
-        <div class="name" id="lil-gui-name-8">number</div>
-        <div class="widget">
-          <input type="text" aria-labelledby="lil-gui-name-8" />
-        </div>
-      </div>
-    </div>
-      </div>`
 
 
-        function creatediv(className, parent, tagname = "DIV") {
-            const res = document.createElement(tagname);
-            if (className)
-                res.className = className;
-            parent.appendChild(res);
-            return res;
-        }
 
     }
 

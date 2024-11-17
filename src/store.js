@@ -96,5 +96,12 @@ window.addEventListener(
     false
 );
 
+function creatediv(className, parent, tagname = "DIV") {
+    const res = document.createElement(tagname);
+    if (className)
+        res.className = className;
+    parent.appendChild(res);
+    return res;
+}
 
-export { mainObj, openMap, openIDs }
+export { mainObj, openMap, openIDs, creatediv }

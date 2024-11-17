@@ -1,9 +1,9 @@
 <script>
-  import "ag-grid-community/styles/ag-grid.css";
-  import "ag-grid-community/styles/ag-theme-balham.css";
   import { GridGeometry } from "../models/GridGeometry";
   import { mainObj, openMap } from "../store";
   import { onMount } from "svelte";
+  import { Editor } from "../models/Editor";
+  import { ModalDialog } from "../models/ModalDialog";
 
   let { IdDeclare, extparams } = $props();
 
@@ -15,12 +15,29 @@
   let KeyValue = $state(false);
   let IdDeclareSet = $state(false);
 
-  //console.log(extparams.id);
+  let editDialog;
+  let settingDialog;
+  let editor;
+  let setting;
+
+  
 
   openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
     adiv.classList.toggle("ag-theme-balham");
   };
+
+  let openEdit = ()=> {
+    editDialog.showModal();
+  }
+
+  let openNew = ()=> {
+    editDialog.showModal();
+  }
+
+  let openSetting = ()=> {
+    settingDialog.showModal();
+  }
 
   onMount(async () => {
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
@@ -37,6 +54,17 @@
     EditProc = agrid.mid.EditProc;
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
+    if (EditProc)
+    {
+      editDialog = new ModalDialog(400, 700);
+      editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+    }
+
+    if (IdDeclareSet)
+    {
+      settingDialog = new ModalDialog(200, 700);
+      setting = new Editor(agrid.mid.Setting.ReferEdit, settingDialog.content, {});
+    }
   });
 </script>
 
@@ -50,7 +78,7 @@
     <slot></slot>
     {#if DelProc}
       <div class="but" title="add record">
-        <button 
+        <button on:click={openNew}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">add</i>
@@ -59,7 +87,7 @@
     {/if}
     {#if EditProc}
       <div class="but" title="edit record">
-        <button
+        <button on:click={openEdit}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">edit</i>
@@ -97,7 +125,7 @@
 
     {#if IdDeclareSet}
       <div class="but"  title="settings">
-        <button
+        <button on:click={openSetting}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">settings</i>

@@ -11,6 +11,10 @@
   --dark-button: gray;
 }
 
+.winhide
+{
+  display: none;
+}
 
 .dark dialog {
   background-color: var(--dark-bg);
@@ -137,6 +141,7 @@ body {
 .contentDialog {
   margin: 3px;
   flex-grow: 1;
+  height: calc(100% - 60px);
   /*border: 1px solid lightgray;*/
   
 }

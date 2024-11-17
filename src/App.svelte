@@ -1,12 +1,12 @@
 <script>
   import "./css/skin-win8/ui.fancytree.css";
-
   import { CreateTreeTree, treeMap } from "./models/TreeCore";
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
   import Dogovors from "./lib/Dogovors.svelte";
   import { mainObj, openMap, openIDs } from "./store";
   import { Editor } from "./models/Editor";
+  import { ModalDialog } from "./models/ModalDialog";
   import LilGui from "./lib/LilGui.svelte";
 
   let dialog;
@@ -14,11 +14,6 @@
   let mode = "wb_sunny"; //"brightness_2";
   let title = "Главное меню";
 
-  let dialog1;
-  let sheme = true;
-
-  let content;
-  let edi;
 
   let currentActive = "-1";
   let opens = [];
@@ -27,17 +22,13 @@
     dialog.showModal();
   }
 
-  function openModal1() {
-    dialog1.showModal();
-  }
+  
 
   function closeModal() {
     dialog.close();
   }
 
-  function closeModal1() {
-    dialog1.close();
-  }
+  
 
   function togleMode() {
     mode = mode == "wb_sunny" ? "brightness_2" : "wb_sunny";
@@ -75,13 +66,7 @@
     let startid = window.location.hash.replace("#", "");
     let startobj = treeMap.get(startid);
     if (startobj) mainObj.open(startid, startobj.link1, startobj.params);
-    {
-      const url = "/Finder.json";
-      const res = await fetch(url);
-      const data = await res.json();
-      let manager = {}
-      edi = new Editor(data.ReferEdit, content, manager);
-    }
+    
   });
 </script>
 
@@ -89,7 +74,7 @@
   <div class="menubut">
     <button
       class="mdl-button mdl-js-button mdl-button--fab darkop"
-      on:click={openModal1}
+      on:click={openModal}
     >
       <i class="material-icons">menu</i>
     </button>
@@ -103,23 +88,6 @@
     </button>
   </div>
 
-  <dialog bind:this={dialog1} style="height:400px;width:600px;padding: 0px;">
-    <div class="modalDialog">
-      <div class="contentDialog" bind:this={content} style="max-height:338px"></div>
-      <div class="dialogPanel">
-        <div class="dialogButton">
-          <button class="mdl-button mdl-js-button mdl-button--raised">OK</button
-          >
-        </div>
-        <div class="dialogButton">
-          <button
-            class="mdl-button mdl-js-button mdl-button--raised"
-            on:click={closeModal1}>Cancel</button
-          >
-        </div>
-      </div>
-    </div>
-  </dialog>
 
   <dialog bind:this={dialog} class="modal">
     <div
@@ -146,7 +114,7 @@
       >
         <div>
           <button
-            class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect"
+            class="mdl-button mdl-js-button mdl-button--raised"
             on:click={closeModal}
           >
             <div class="button-text">Close</div>
@@ -156,6 +124,8 @@
     </div>
   </dialog>
   <!--<LilGui/>-->
+
+
   {#each opens as e}
     <div hidden={e != currentActive}>
       <svelte:component

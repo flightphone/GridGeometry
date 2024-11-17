@@ -218,3 +218,24 @@
         </div>
       </div>
     </div>
+
+<!--modal-->
+
+
+    <dialog bind:this={dialog1} style="height:500px;width:800px;padding: 0px;">
+      <div class="modalDialog">
+        <div class="contentDialog" bind:this={content} ></div>
+        <div class="dialogPanel">
+          <div class="dialogButton">
+            <button class="mdl-button mdl-js-button mdl-button--raised">OK</button
+            >
+          </div>
+          <div class="dialogButton">
+            <button
+              class="mdl-button mdl-js-button mdl-button--raised"
+              on:click={closeModal1}>Cancel</button
+            >
+          </div>
+        </div>
+      </div>
+    </dialog>
