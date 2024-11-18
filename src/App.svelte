@@ -51,7 +51,8 @@
   }
 
   onMount(async () => {
-    let url = mainObj.baseUrl + "ustore/gettree";
+    //let url = mainObj.baseUrl + "ustore/gettree";
+    let url = "/tmp/tree.json";
     if (mainObj.jsonData)
       url = "/gettree.json";
 
