@@ -180,6 +180,8 @@ class Editor {
                 let opt = sel.options[sel.selectedIndex];
                 if (opt)
                     column.display.textContent = opt.text;
+                else    
+                    column.display.textContent = "";
             }
             else
                 column.display.textContent = column.control.value;

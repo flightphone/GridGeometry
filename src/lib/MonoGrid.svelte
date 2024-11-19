@@ -37,6 +37,11 @@
   };
 
   let openNew = () => {
+    let rw = {};
+    agrid.mid.ColumnTab.forEach((c)=>{
+     rw[c] = "";
+    })
+    editor.edit(rw);
     editDialog.showModal();
   };
 
@@ -45,6 +50,11 @@
     setting.edit(rw);
     settingDialog.showModal();
   };
+
+  let save = () => {
+    editDialog.close();
+    console.log(editor.WorkRow);
+  }
 
   let saveSetting = () => {
     settingDialog.close();
@@ -73,7 +83,7 @@
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
     if (EditProc) {
-      editDialog = new ModalDialog(400, 700);
+      editDialog = new ModalDialog(600, 900, save);
       editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
     }
 
