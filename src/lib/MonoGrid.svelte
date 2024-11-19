@@ -20,24 +20,42 @@
   let editor;
   let setting;
 
-  
-
   openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
     adiv.classList.toggle("ag-theme-balham");
   };
 
-  let openEdit = ()=> {
+  let openEdit = () => {
+    let rs = agrid.gridApi.getSelectedNodes();
+    if (!rs[0]) {
+      mainObj.alert("not selected row");
+      return;
+    }
+    let rw = rs[0].data;
+    editor.edit(rw);
     editDialog.showModal();
-  }
+  };
 
-  let openNew = ()=> {
+  let openNew = () => {
     editDialog.showModal();
-  }
+  };
 
-  let openSetting = ()=> {
+  let openSetting = () => {
+    let rw = agrid.mid.Setting.MainTab[0];
+    setting.edit(rw);
     settingDialog.showModal();
-  }
+  };
+
+  let saveSetting = () => {
+    settingDialog.close();
+    for (let f in setting.WorkRow)
+      agrid.mid.Setting.MainTab[0][f] = setting.WorkRow[f];
+    agrid.mid.Setting.ReferEdit.SaveFieldList.map((f) => {
+      agrid.mid.SQLParams["@"+f] = setting.WorkRow[f];
+    });
+    //console.log(agrid.mid.SQLParams);
+    agrid.updateTab();
+  };
 
   onMount(async () => {
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
@@ -54,16 +72,18 @@
     EditProc = agrid.mid.EditProc;
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
-    if (EditProc)
-    {
+    if (EditProc) {
       editDialog = new ModalDialog(400, 700);
       editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
     }
 
-    if (IdDeclareSet)
-    {
-      settingDialog = new ModalDialog(200, 700);
-      setting = new Editor(agrid.mid.Setting.ReferEdit, settingDialog.content, {});
+    if (IdDeclareSet) {
+      settingDialog = new ModalDialog(200, 700, saveSetting);
+      setting = new Editor(
+        agrid.mid.Setting.ReferEdit,
+        settingDialog.content,
+        {}
+      );
     }
   });
 </script>
@@ -74,11 +94,11 @@
       {Descr}
     </h5>
 
-    
     <slot></slot>
     {#if DelProc}
       <div class="but" title="add record">
-        <button on:click={openNew}
+        <button
+          on:click={openNew}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">add</i>
@@ -87,7 +107,8 @@
     {/if}
     {#if EditProc}
       <div class="but" title="edit record">
-        <button on:click={openEdit}
+        <button
+          on:click={openEdit}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">edit</i>
@@ -95,7 +116,7 @@
       </div>
     {/if}
     {#if DelProc}
-      <div class="but"  title="delete record">
+      <div class="but" title="delete record">
         <button
           on:click={agrid.rowDelete}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -104,7 +125,7 @@
         </button>
       </div>
     {/if}
-    <div class="but"  title="refresh">
+    <div class="but" title="refresh">
       <button
         on:click={agrid.updateTab}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -113,7 +134,7 @@
       </button>
     </div>
     {#if KeyValue}
-      <div class="but"  title="detail">
+      <div class="but" title="detail">
         <button
           on:click={agrid.openDetail}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -124,8 +145,9 @@
     {/if}
 
     {#if IdDeclareSet}
-      <div class="but"  title="settings">
-        <button on:click={openSetting}
+      <div class="but" title="settings">
+        <button
+          on:click={openSetting}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">settings</i>

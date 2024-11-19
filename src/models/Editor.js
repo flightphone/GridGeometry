@@ -6,14 +6,9 @@ import { mainObj } from "../store";
 
 class Editor {
     constructor(ReferEdit, element, manager = {}) {
-
-        let change = (e) => {
-            let el = e.target;
-            let ht = el.parentElement.querySelector(".display");
-            let sel = e.target;
-            if (ht) ht.innerHTML = sel.options[sel.selectedIndex].text;
-        };
-
+        this.WorkRow = {};
+        this.FControls = new Map();
+        
         let click = (e) => {
             let description;
             let el = e.target;
@@ -59,22 +54,25 @@ class Editor {
         this.element = element;
         this.ReferEdit = ReferEdit;
         element.onclick = click;
-        let classname;
+
         let root = creatediv("lil-gui root", element);
         let children = creatediv("children", root);
 
         ReferEdit.Editors.forEach(column => {
             let inp;
+            let FCon = { DisplayFormat: column.DisplayFormat };
+            let classname = "";
 
             let classController = "controller string";
             if (column.joinRow && column.joinRow.classname) {
                 classController = "controller option";
                 classname = column.joinRow.classname;
+
             }
 
 
             let controller = creatediv(classController, children);
-            controller.setAttribute("id", column.FieldName);
+            //controller.setAttribute("id", column.FieldName);
             let name = creatediv("name", controller);
             name.innerText = column.FieldCaption;
             let widget = creatediv("widget", controller);
@@ -85,28 +83,43 @@ class Editor {
                     typ = "date"
                 inp.setAttribute("type", typ);
                 inp.setAttribute("spellcheck", "false");
+                inp.onchange = (e) => {
+                    this.WorkRow[column.FieldName] = inp.value;
+                }
+
             }
 
             if (classController == "controller option") {
                 let classdisplay = "finder";
+                let display = document.createElement("div");
                 if (classname == "Bureau.GridCombo") {
                     classdisplay = "display";
-                    let sel = creatediv("", widget, "select");
-                    sel.onchange = change;
+                    inp = creatediv("", widget, "select");
                     column.joinRow.FindConrol.MainTab.forEach((e) => {
-                        let opt = creatediv("", sel, "option");
+                        let opt = creatediv("", inp, "option");
                         opt.value = e[column.joinRow.keyField];
                         opt.text = e[column.joinRow.FindConrol.DispField]
                     });
+                    inp.onchange = (e) => {
+                        display.textContent = inp.options[inp.selectedIndex].text;
+                        this.WorkRow[column.joinRow.valField] = inp.value;
+                        for (let s in column.joinRow.fields) {
+                            let f = column.joinRow.fields[s];
+                            if (f != column.joinRow.valField) {
+                                this.WorkRow[f] = inp.options[inp.selectedIndex].text;
+                                break;
+                            }
+                        }
+                    };
                 }
                 else {
-
                     inp = creatediv("", widget, "INPUT");
                     inp.style.width = "0px";
                     inp.onkeydown = (event) => { if (event.keyCode == 13) openfinder(inp) };
                 }
+                display = creatediv(classdisplay, widget);
+                FCon.display = display;
 
-                let display = creatediv(classdisplay, widget);
                 if (classname == "Bureau.Finder") {
 
                     const cnt = document.createElement("div"); //creatediv(mainObj.sheme, document.querySelector("main"));
@@ -124,10 +137,12 @@ class Editor {
                             mainObj.alert('not selected row');
                             return;
                         }
-                        let rw = rs[0].data;
-                        let val = rw[grid.mid.KeyF];
-                        let title = rw[grid.mid.DispField];
-                        display.textContent = title;
+                        let row = rs[0].data;
+                        for (let s in column.joinRow.fields) {
+                            let f = column.joinRow.fields[s];
+                            this.WorkRow[f] = row[s];
+                            this.setVal(f);
+                        }
                         dialog.close();
                     }
                     dialog = new ModalDialog(500, 800, okfun);
@@ -135,8 +150,51 @@ class Editor {
                     inp.dialog = dialog;
                 }
             }
+
+            FCon.control = inp;
+            if (classname == "Bureau.GridCombo") {
+                this.FControls.set(column.joinRow.valField, FCon);
+            }
+            else
+                this.FControls.set(column.FieldName, FCon);
         });
 
+        //console.log(this.FControls)    ;
+
+    }
+
+    setVal = (FieldName) => {
+        let column = this.FControls.get(FieldName);
+        if (!column)
+            return;
+        let dt = this.WorkRow[FieldName];
+        if (column.DisplayFormat == "dd.MM.yyyy") {
+            if (dt)
+                dt = dt.substring(0, 10);
+        }
+        column.control.value = dt;
+
+        if (column.display) {
+            if (column.control.tagName == "SELECT") {
+                let sel = column.control;
+                let opt = sel.options[sel.selectedIndex];
+                if (opt)
+                    column.display.textContent = opt.text;
+            }
+            else
+                column.display.textContent = column.control.value;
+        }
+    }
+
+    edit = (row) => {
+        this.WorkRow = {};
+        for (let column in row) {
+            this.WorkRow[column] = row[column] == null ? "" : row[column];
+        }
+        this.FControls.forEach((column, FieldName) => {
+            this.setVal(FieldName);
+        }
+        )
 
 
     }

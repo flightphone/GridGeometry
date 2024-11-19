@@ -144,6 +144,7 @@ class GridGeometry {
         mainObj.open(newid, "Bureau.Finder", iddeclare, { TextParams: TextParams, title: title });
     };
 
+    
     rowDelete = () => {
         let rs = this.gridApi.getSelectedNodes();
         if (!rs[0]) {
