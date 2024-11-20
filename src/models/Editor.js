@@ -81,6 +81,9 @@ class Editor {
                 let typ = "text";
                 if (column.DisplayFormat == "dd.MM.yyyy")
                     typ = "date"
+
+                if (column.DisplayFormat == "dd.MM.yyyy HH:mm")
+                    typ = "datetime-local"    
                 inp.setAttribute("type", typ);
                 inp.setAttribute("spellcheck", "false");
                 inp.onchange = (e) => {
@@ -171,6 +174,11 @@ class Editor {
         if (column.DisplayFormat == "dd.MM.yyyy") {
             if (dt)
                 dt = dt.substring(0, 10);
+        }
+
+        if (column.DisplayFormat == "dd.MM.yyyy HH:mm") {
+            if (dt)
+                dt = dt.substring(0, 16);//.replace("T", " ")
         }
         column.control.value = dt;
 

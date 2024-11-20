@@ -52,11 +52,13 @@ let mainObj = {
     dateformat: function (d, f) {
         if (d == null)
             return ""
-        //if (!d) return d;
+        if (!f) 
+            return d;
+        
         if (f == "text" || f == "hide" || f == 'password' || f == 'disabled' || f == null || f == "")
             return d;
 
-        if (d.length != 24) {
+        if (f.indexOf('.0') > -1) {
             let res = f.match(/0\.(0+)/);
 
             let n = 0;
@@ -68,7 +70,9 @@ let mainObj = {
             if (n > 0) return Number(d.toString()).toFixed(n);
             else return d;
         }
-        else {
+        
+        if (f.indexOf('dd.MM.yyyy') > -1)
+        {
             try {
                 f = f.replace("yyyy", d.substr(0, 4));
                 f = f.replace("yy", d.substr(2, 2));
@@ -79,8 +83,10 @@ let mainObj = {
             } catch (error) {
                 f = error.toString()
             }
+            return f;
         }
-        return f;
+
+        return d;
     }
 }
 

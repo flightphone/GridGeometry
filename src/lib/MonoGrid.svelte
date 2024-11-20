@@ -20,12 +20,15 @@
   let editor;
   let setting;
 
+  let action = "edit";
+
   openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
     adiv.classList.toggle("ag-theme-balham");
   };
 
   let openEdit = () => {
+    action = "edit";
     let rs = agrid.gridApi.getSelectedNodes();
     if (!rs[0]) {
       mainObj.alert("not selected row");
@@ -37,10 +40,11 @@
   };
 
   let openNew = () => {
+    action = "add";
     let rw = {};
-    agrid.mid.ColumnTab.forEach((c)=>{
-     rw[c] = "";
-    })
+    agrid.mid.ColumnTab.forEach((c) => {
+      rw[c] = "";
+    });
     editor.edit(rw);
     editDialog.showModal();
   };
@@ -51,20 +55,33 @@
     settingDialog.showModal();
   };
 
-  let save = () => {
-    editDialog.close();
-    console.log(editor.WorkRow);
-  }
+  let save = async () => {
+    try {
+      let res = await agrid.save(editor.WorkRow, action);
+      if (res) editDialog.close();
+    } catch (err) {
+      mainObj.alert(err.toString());
+    }
+    //console.log(editor.WorkRow);
+  };
 
   let saveSetting = () => {
     settingDialog.close();
     for (let f in setting.WorkRow)
       agrid.mid.Setting.MainTab[0][f] = setting.WorkRow[f];
     agrid.mid.Setting.ReferEdit.SaveFieldList.map((f) => {
-      agrid.mid.SQLParams["@"+f] = setting.WorkRow[f];
+      agrid.mid.SQLParams["@" + f] = setting.WorkRow[f];
     });
     //console.log(agrid.mid.SQLParams);
     agrid.updateTab();
+  };
+
+  let rowDelete = async () => {
+    try {
+      await agrid.rowDelete();
+    } catch (err) {
+      mainObj.alert(err.toString());
+    }
   };
 
   onMount(async () => {
@@ -128,7 +145,7 @@
     {#if DelProc}
       <div class="but" title="delete record">
         <button
-          on:click={agrid.rowDelete}
+          on:click={rowDelete}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">delete</i>
