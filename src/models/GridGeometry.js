@@ -53,7 +53,7 @@ class GridGeometry {
     start = async () => {
         try {
             if (mainObj.jsonData) {
-                const url = `/FinderStart${this.idDeclare}.json`;
+                const url = `/json_grids/FinderStart${this.idDeclare}.json`;
                 const response = await fetch(url);
                 this.mid = await response.json();
             }
