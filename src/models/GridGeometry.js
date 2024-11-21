@@ -19,12 +19,27 @@ class GridGeometry {
             /*
             onCellFocused: (e) => {
                 //console.log(e);
-                //current = e; currentI = current.rowIndex;
-                //let rw = gridApi.rowModel.rowsToDisplay[e.rowIndex];
-                let rw = e.api.getRowNode(e.rowIndex);
+                let rw = e.api.getDisplayedRowAtIndex(e.rowIndex);
                 rw.setSelected(true);
             },
             */
+
+            onCellKeyDown: (e) => {
+                if (e.event.code == "Enter" && this.extparams.onEnter) {
+                    e.node.setSelected(true);
+                    this.extparams.onEnter();
+                }
+                if (e.event.code == "Delete" && this.extparams.onDelete) {
+                    e.node.setSelected(true);
+                    this.extparams.onDelete();
+                }
+            },
+            onCellDoubleClicked: (e) => {
+                if (this.extparams.onEnter) {
+                    e.node.setSelected(true);
+                    this.extparams.onEnter();
+                }
+            },
 
             defaultColDef: {
                 sortable: true,
@@ -253,6 +268,7 @@ class GridGeometry {
         if (action == "add") {
             findData.MainTab.unshift(WorkRow);
             this.gridApi.setGridOption("rowData", findData.MainTab);
+
         }
         return true;
     };

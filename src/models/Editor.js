@@ -129,7 +129,8 @@ class Editor {
                     cnt.style.width = "100%";
                     cnt.style.height = "100%";
                     cnt.className = mainObj.sheme;
-                    let grid = new GridGeometry(column.joinRow.IdDeclare, cnt, {});
+                    const gridManager = {};
+                    let grid = new GridGeometry(column.joinRow.IdDeclare, cnt, gridManager);
                     grid.mid = column.joinRow.FindConrol;
                     grid.init();
                     grid.updateTab();
@@ -148,6 +149,7 @@ class Editor {
                         }
                         dialog.close();
                     }
+                    gridManager.onEnter = okfun;
                     dialog = new ModalDialog(500, 800, okfun);
                     dialog.content.appendChild(cnt);
                     inp.dialog = dialog;

@@ -71,7 +71,7 @@ let mainObj = {
             else return d;
         }
         
-        if (f.indexOf('dd.MM.yyyy') > -1)
+        if (f.indexOf('dd.MM') > -1)
         {
             try {
                 f = f.replace("yyyy", d.substr(0, 4));
