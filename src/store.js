@@ -5,7 +5,7 @@ let openMap = new Map();
 let openIDs = []
 
 let mainObj = {
-    jsonData: true,
+    jsonData: false,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {

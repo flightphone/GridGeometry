@@ -8,7 +8,9 @@ class Editor {
     constructor(ReferEdit, element, manager = {}) {
         this.WorkRow = {};
         this.FControls = new Map();
-        
+        this.element = element;
+        this.ReferEdit = ReferEdit;
+
         let click = (e) => {
             let description;
             let el = e.target;
@@ -48,17 +50,12 @@ class Editor {
             ht.dialog.showModal();
             //ht.cnt.classList.toggle("winhide");
         }
-
-
-
-        this.element = element;
-        this.ReferEdit = ReferEdit;
         element.onclick = click;
 
         let root = creatediv("lil-gui root", element);
         let children = creatediv("children", root);
 
-        ReferEdit.Editors.forEach(column => {
+        ReferEdit.Editors.forEach(async (column) => {
             let inp;
             let FCon = { DisplayFormat: column.DisplayFormat };
             let classname = "";
@@ -83,7 +80,7 @@ class Editor {
                     typ = "date"
 
                 if (column.DisplayFormat == "dd.MM.yyyy HH:mm")
-                    typ = "datetime-local"    
+                    typ = "datetime-local"
                 inp.setAttribute("type", typ);
                 inp.setAttribute("spellcheck", "false");
                 inp.onchange = (e) => {
@@ -94,8 +91,14 @@ class Editor {
 
             if (classController == "controller option") {
                 let classdisplay = "finder";
-                let display = document.createElement("div");
+                //let display = document.createElement("div");
                 if (classname == "Bureau.GridCombo") {
+                    if (!mainObj.jsonData)
+                    {
+                        column.joinRow.FindConrol = await this.getMid(column.joinRow.IdDeclare);    
+                        //console.log(column.joinRow.FindConrol);
+                    }
+                    
                     classdisplay = "display";
                     inp = creatediv("", widget, "select");
                     column.joinRow.FindConrol.MainTab.forEach((e) => {
@@ -120,7 +123,7 @@ class Editor {
                     inp.style.width = "0px";
                     inp.onkeydown = (event) => { if (event.keyCode == 13) openfinder(inp) };
                 }
-                display = creatediv(classdisplay, widget);
+                let display = creatediv(classdisplay, widget);
                 FCon.display = display;
 
                 if (classname == "Bureau.Finder") {
@@ -130,10 +133,16 @@ class Editor {
                     cnt.style.height = "100%";
                     cnt.className = mainObj.sheme;
                     const gridManager = {};
-                    let grid = new GridGeometry(column.joinRow.IdDeclare, cnt, gridManager);
-                    grid.mid = column.joinRow.FindConrol;
+                    const grid = new GridGeometry(column.joinRow.IdDeclare, cnt, gridManager);
+                    if (mainObj.jsonData) {
+                        grid.mid = column.joinRow.FindConrol;
+                    }
+                    else {
+                        await grid.start();
+                        column.joinRow.FindConrol = grid.mid;
+                    }
                     grid.init();
-                    grid.updateTab();
+                    //grid.updateTab();
                     let dialog;
                     let okfun = () => {
                         let rs = grid.gridApi.getSelectedNodes();
@@ -163,9 +172,25 @@ class Editor {
             else
                 this.FControls.set(column.FieldName, FCon);
         });
-
+        //this.initialize(ReferEdit, element, manager);
         //console.log(this.FControls)    ;
 
+    }
+    
+    getMid = async (idDeclare) => {
+        const url = `${mainObj.baseUrl}React/FinderStart`;
+                const bd = new FormData();
+                bd.append("id", idDeclare);
+                bd.append("mode", "new");
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: bd,
+                    cache: "no-cache",
+                    //credentials: "include",
+                });
+                const mid = await response.json();
+                return mid;
     }
 
     setVal = (FieldName) => {
@@ -190,7 +215,7 @@ class Editor {
                 let opt = sel.options[sel.selectedIndex];
                 if (opt)
                     column.display.textContent = opt.text;
-                else    
+                else
                     column.display.textContent = "";
             }
             else

@@ -16,13 +16,13 @@ class GridGeometry {
                 if (this.extparams.onSelect)
                     this.extparams.onSelect(ev);
             },
-            /*
+           
             onCellFocused: (e) => {
                 //console.log(e);
                 let rw = e.api.getDisplayedRowAtIndex(e.rowIndex);
                 rw.setSelected(true);
             },
-            */
+           
 
             onCellKeyDown: (e) => {
                 if (e.event.code == "Enter" && this.extparams.onEnter) {

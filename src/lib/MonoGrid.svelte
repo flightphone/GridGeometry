@@ -27,7 +27,7 @@
     adiv.classList.toggle("ag-theme-balham");
   };
 
-  const gridEvent = {}
+ //const gridEvent = {}
 
   let openEdit = () => {
     action = "edit";
@@ -87,7 +87,7 @@
   };
 
   onMount(async () => {
-    agrid = new GridGeometry(IdDeclare, adiv, gridEvent);
+    agrid = new GridGeometry(IdDeclare, adiv, extparams);
     await agrid.start();
     if (agrid.mid.Error) {
       mainObj.alert(agrid.mid.Error);
@@ -104,11 +104,11 @@
     if (EditProc) {
       editDialog = new ModalDialog(600, 900, save);
       editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
-      gridEvent.onEnter = openEdit;
+      extparams.onEnter = openEdit;
     }
 
     if (DelProc) {
-      gridEvent.onDelete = rowDelete;
+      extparams.onDelete = rowDelete;
     }
 
     if (IdDeclareSet) {

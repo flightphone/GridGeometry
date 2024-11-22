@@ -4,8 +4,12 @@
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
   import Dogovors from "./lib/Dogovors.svelte";
+  import FlightCard from "./lib/FlightCard.svelte";
+  import FlightCardsList from "./lib/FlightCardsList.svelte";
   import { mainObj, openMap, openIDs } from "./store";
 
+
+  let smenu = true;
   let dialog;
   let treediv;
   let mode = "wb_sunny"; //"brightness_2";
@@ -33,6 +37,8 @@
   }
 
   mainObj.getForm = (id, link1, params) => {
+    if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
+    if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
     if (params) return MonoGrid;
     else return "not implemented";
@@ -51,21 +57,29 @@
   }
 
   onMount(async () => {
+    let startid = window.location.hash.replace("#", "");
+    if (startid && startid.substring(0, 2) == "FC") {
+      smenu = false;
+      let fc_pk = startid.substring(2);
+      mainObj.open(startid, "FlightCard", "", {FC_PK:fc_pk});
+      return;
+    }
+
     //let url = mainObj.baseUrl + "ustore/gettree";
     let url = "/tmp/tree.json";
-    if (mainObj.jsonData)
-      url = "/json_grids/gettree.json";
+    if (mainObj.jsonData) url = "/json_grids/gettree.json";
 
     const res = await fetch(url);
     const data = await res.json();
     CreateTreeTree(treediv, data, openItem);
-    let startid = window.location.hash.replace("#", "");
+
     let startobj = treeMap.get(startid);
     if (startobj) mainObj.open(startid, startobj.link1, startobj.params);
   });
 </script>
 
 <main>
+  {#if smenu}
   <div class="menubut">
     <button
       class="mdl-button mdl-js-button mdl-button--fab darkop"
@@ -74,6 +88,8 @@
       <i class="material-icons">menu</i>
     </button>
   </div>
+  {/if}
+  
   <div class="menubut2">
     <button
       class="mdl-button mdl-js-button mdl-button--fab darkop"
@@ -117,7 +133,6 @@
       </div>
     </div>
   </dialog>
-  
 
   {#each opens as e}
     <div hidden={e != currentActive}>
