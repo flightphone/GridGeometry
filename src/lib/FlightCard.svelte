@@ -14,7 +14,8 @@
     const response = await fetch("/tmp/Editor1636.json");
     const ReferEdit = await response.json();
     editor = new Editor(ReferEdit, fcdiv, {});
-    editor.edit(data.MainTab[0]);
+    editor.edit(data.MainTab[0]); 
+    
   })
 </script>
 
@@ -32,7 +33,7 @@
   flex-direction: row;"
   >
   <!--height:calc(100% - 6px)-->
-    <div bind:this={fcdiv} style="width:30%; margin: 3px;border: 1px solid gray;height:calc(100% - 6px)">
+    <div bind:this={fcdiv} style="width:50%; margin: 3px;border: 1px solid gray;height:calc(100% - 6px)">
 
 
     </div>

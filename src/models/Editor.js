@@ -6,6 +6,7 @@ import { mainObj } from "../store";
 
 class Editor {
     constructor(ReferEdit, element, manager = {}) {
+     
         this.WorkRow = {};
         this.FControls = new Map();
         this.element = element;
@@ -118,7 +119,7 @@ class Editor {
             if (classController == "controller option") {
                 let classdisplay = "finder";
                 if (classname == "Bureau.GridCombo") {
-                    if (!mainObj.jsonData)
+                    if (!mainObj.jsonData && column.joinRow.IdDeclare)
                     {
                         column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, null);//this.getMid(column.joinRow.IdDeclare);    
                     }
@@ -194,6 +195,7 @@ class Editor {
             FCon.control = inp;
             if (classname == "Bureau.GridCombo") {
                 this.FControls.set(column.joinRow.valField, FCon);
+                //console.log(column.joinRow.valField);
             }
             else
                 this.FControls.set(column.FieldName, FCon);
@@ -202,23 +204,7 @@ class Editor {
         //console.log(this.FControls)    ;
 
     }
-    /*
-    getMid = async (idDeclare) => {
-        const url = `${mainObj.baseUrl}React/FinderStart`;
-                const bd = new FormData();
-                bd.append("id", idDeclare);
-                bd.append("mode", "new");
-
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: bd,
-                    cache: "no-cache",
-                    //credentials: "include",
-                });
-                const mid = await response.json();
-                return mid;
-    }
-    */
+    
 
     setVal = (FieldName) => {
         let column = this.FControls.get(FieldName);
@@ -236,6 +222,8 @@ class Editor {
         }
         column.control.value = dt;
 
+        
+
         if (column.display) {
             if (column.control.tagName == "SELECT") {
                 let sel = column.control;
@@ -251,11 +239,16 @@ class Editor {
     }
 
     edit = (row) => {
+        while (this.loaded > 0)
+        {
+            ;
+        }
         this.WorkRow = {};
         for (let column in row) {
             this.WorkRow[column] = row[column] == null ? "" : row[column];
         }
         this.FControls.forEach((column, FieldName) => {
+            
             this.setVal(FieldName);
         }
         )
