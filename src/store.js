@@ -87,6 +87,38 @@ let mainObj = {
         }
 
         return d;
+    },
+
+    fetch: async (idDeclare, mode, SQLParams, TextParams) => {
+        let mid;
+        try {
+            
+            if (mainObj.jsonData) {
+                const url = `/json_grids/FinderStart${idDeclare}.json`;
+                const response = await fetch(url);
+                mid = await response.json();
+            }
+            else {
+                const url = `${mainObj.baseUrl}React/FinderStart`;
+                const bd = new FormData();
+                bd.append("id", idDeclare);
+                bd.append("mode", mode);
+                if (SQLParams) bd.append("SQLParams", JSON.stringify(SQLParams));
+                if (TextParams) bd.append("TextParams", JSON.stringify(TextParams));
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    body: bd,
+                    cache: "no-cache",
+                    //credentials: "include",
+                });
+                mid = await response.json();
+            }
+        }
+        catch (err) {
+            mid = { Error: err.toString() };
+        }
+        return mid;
     }
 }
 

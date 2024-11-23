@@ -16,13 +16,13 @@ class GridGeometry {
                 if (this.extparams.onSelect)
                     this.extparams.onSelect(ev);
             },
-           
+
             onCellFocused: (e) => {
                 //console.log(e);
                 let rw = e.api.getDisplayedRowAtIndex(e.rowIndex);
                 rw.setSelected(true);
             },
-           
+
 
             onCellKeyDown: (e) => {
                 if (e.event.code == "Enter" && this.extparams.onEnter) {
@@ -66,32 +66,7 @@ class GridGeometry {
     }
 
     start = async () => {
-        try {
-            if (mainObj.jsonData) {
-                const url = `/json_grids/FinderStart${this.idDeclare}.json`;
-                const response = await fetch(url);
-                this.mid = await response.json();
-            }
-            else {
-                const url = `${mainObj.baseUrl}React/FinderStart`;
-                const bd = new FormData();
-                bd.append("id", this.idDeclare);
-                bd.append("mode", "new");
-                if (this.extparams.SQLParams) bd.append("SQLParams", JSON.stringify(this.extparams.SQLParams));
-                if (this.extparams.TextParams) bd.append("TextParams", JSON.stringify(this.extparams.TextParams));
-
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: bd,
-                    cache: "no-cache",
-                    //credentials: "include",
-                });
-                this.mid = await response.json();
-            }
-        }
-        catch (err) {
-            this.mid = { Error: err.toString() };
-        }
+        this.mid = await mainObj.fetch(this.idDeclare, "new", this.extparams.SQLParams, this.extparams.TextParams);
     }
 
     init = () => {
@@ -106,41 +81,17 @@ class GridGeometry {
     }
 
     updateTab = async () => {
-        try {
-            //const response = await fetch("/Finder.json");
-            //const response = await fetch(url);
-            if (mainObj.jsonData)
-                return;
-            this.gridApi.setGridOption("rowData", []);
-            const url = `${mainObj.baseUrl}React/FinderStart`;
-            const bd = new FormData();
-            bd.append("id", this.idDeclare);
-            bd.append("mode", "data");
-            bd.append("page", this.mid.page.toString());
-            bd.append("Fc", JSON.stringify(this.mid.Fcols)); //mid.Fcols
-            if (this.mid.SQLParams)
-                bd.append("SQLParams", JSON.stringify(this.mid.SQLParams));
-            if (this.mid.TextParams)
-                bd.append("TextParams", JSON.stringify(this.mid.TextParams));
-            const response = await fetch(url, {
-                method: "POST",
-                body: bd,
-                cache: "no-cache",
-                //credentials: "include",
-            });
-            let data = await response.json();
-            if (data.Error) {
-                mainObj.alert(data.Error);
-                return;
-            }
-            this.mid.MainTab = data.MainTab;
-            this.gridApi.setGridOption("rowData", data.MainTab);
 
+        if (mainObj.jsonData)
+            return;
+        this.gridApi.setGridOption("rowData", []);
+        let data = await mainObj.fetch(this.idDeclare, "data", this.mid.SQLParams, this.mid.TextParams);
+        if (data.Error) {
+            mainObj.alert(data.Error);
+            return;
         }
-        catch (err) {
-            //this.mid = { Error: err.toString() };
-            mainObj.alert(err.toString())
-        }
+        this.mid.MainTab = data.MainTab;
+        this.gridApi.setGridOption("rowData", data.MainTab);
 
     }
 

@@ -54,8 +54,28 @@ class Editor {
 
         let root = creatediv("lil-gui root", element);
         let children = creatediv("children", root);
+        let childrens = [children];
+        let ngroup = 0;
 
         ReferEdit.Editors.forEach(async (column) => {
+            //Group
+            if (column.FieldName == "$start_group")
+            {
+                const liclass = (ngroup > 0)? "lil-gui closed": "lil-gui";
+                let lil_gui = creatediv(liclass, childrens[childrens.length-1]);
+                let button = creatediv("title", lil_gui, "button");
+                button.textContent = column.FieldCaption;
+                let child = creatediv("children", lil_gui);
+                childrens.push(child);
+                ngroup += 1;
+                return;
+            }
+
+            if (column.FieldName == "$stop_group")
+            {
+                childrens.splice(-1, 1);
+                return;
+            }
             let inp;
             let FCon = { DisplayFormat: column.DisplayFormat };
             let classname = "";
@@ -68,7 +88,7 @@ class Editor {
             }
 
 
-            let controller = creatediv(classController, children);
+            let controller = creatediv(classController, childrens[childrens.length-1]);
             //controller.setAttribute("id", column.FieldName);
             let name = creatediv("name", controller);
             name.innerText = column.FieldCaption;
@@ -95,7 +115,7 @@ class Editor {
                 if (classname == "Bureau.GridCombo") {
                     if (!mainObj.jsonData)
                     {
-                        column.joinRow.FindConrol = await this.getMid(column.joinRow.IdDeclare);    
+                        column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, null);//this.getMid(column.joinRow.IdDeclare);    
                         //console.log(column.joinRow.FindConrol);
                     }
                     
@@ -176,7 +196,7 @@ class Editor {
         //console.log(this.FControls)    ;
 
     }
-    
+    /*
     getMid = async (idDeclare) => {
         const url = `${mainObj.baseUrl}React/FinderStart`;
                 const bd = new FormData();
@@ -192,6 +212,7 @@ class Editor {
                 const mid = await response.json();
                 return mid;
     }
+    */
 
     setVal = (FieldName) => {
         let column = this.FControls.get(FieldName);
