@@ -46,8 +46,13 @@ class Editor {
             }
         };
 
-        let openfinder = (ht) => {
+        let openfinder = async (ht) => {
             ht.dialog.showModal();
+            if (!ht.grid.inited)
+            {
+                await ht.grid.start();
+                ht.grid.init();
+            }
             //ht.cnt.classList.toggle("winhide");
         }
         element.onclick = click;
@@ -89,12 +94,13 @@ class Editor {
 
 
             let controller = creatediv(classController, childrens[childrens.length-1]);
-            //controller.setAttribute("id", column.FieldName);
             let name = creatediv("name", controller);
             name.innerText = column.FieldCaption;
             let widget = creatediv("widget", controller);
             if (classController == "controller string") {
                 inp = creatediv("", widget, "INPUT");
+                if (column.disabled)
+                    inp.disabled = true;
                 let typ = "text";
                 if (column.DisplayFormat == "dd.MM.yyyy")
                     typ = "date"
@@ -111,12 +117,10 @@ class Editor {
 
             if (classController == "controller option") {
                 let classdisplay = "finder";
-                //let display = document.createElement("div");
                 if (classname == "Bureau.GridCombo") {
                     if (!mainObj.jsonData)
                     {
                         column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, null);//this.getMid(column.joinRow.IdDeclare);    
-                        //console.log(column.joinRow.FindConrol);
                     }
                     
                     classdisplay = "display";
@@ -156,12 +160,13 @@ class Editor {
                     const grid = new GridGeometry(column.joinRow.IdDeclare, cnt, gridManager);
                     if (mainObj.jsonData) {
                         grid.mid = column.joinRow.FindConrol;
+                        grid.init();
                     }
                     else {
-                        await grid.start();
-                        column.joinRow.FindConrol = grid.mid;
+                        //await grid.start();
+                        //column.joinRow.FindConrol = grid.mid;
                     }
-                    grid.init();
+                    
                     //grid.updateTab();
                     let dialog;
                     let okfun = () => {
@@ -182,6 +187,7 @@ class Editor {
                     dialog = new ModalDialog(500, 800, okfun);
                     dialog.content.appendChild(cnt);
                     inp.dialog = dialog;
+                    inp.grid = grid;
                 }
             }
 

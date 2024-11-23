@@ -3,6 +3,7 @@ import { createGrid } from 'ag-grid-community'
 
 class GridGeometry {
     constructor(idDeclare, el, extparams) {
+        this.inited = false;
         this.idDeclare = idDeclare;
         this.extparams = extparams;
         this.gridOptions = {
@@ -78,6 +79,7 @@ class GridGeometry {
         });
         this.gridApi.setGridOption("columnDefs", columnDefs);
         this.gridApi.setGridOption("rowData", this.mid.MainTab);
+        this.inited = true;
     }
 
     updateTab = async () => {
