@@ -6,8 +6,14 @@ import { mainObj } from "../store";
 
 class Editor {
     constructor(ReferEdit, element, manager = {}) {
-     
         this.WorkRow = {};
+        
+        if (manager.row) {
+            for (let column in manager.row) {
+                this.WorkRow[column] = manager.row[column] == null ? "" : manager.row[column];
+            }
+        }
+        this.dependencies = new Map();
         this.FControls = new Map();
         this.element = element;
         this.ReferEdit = ReferEdit;
@@ -49,8 +55,7 @@ class Editor {
 
         let openfinder = async (ht) => {
             ht.dialog.showModal();
-            if (!ht.grid.inited)
-            {
+            if (!ht.grid.inited) {
                 await ht.grid.start();
                 ht.grid.init();
             }
@@ -65,10 +70,9 @@ class Editor {
 
         ReferEdit.Editors.forEach(async (column) => {
             //Group
-            if (column.FieldName == "$start_group")
-            {
-                const liclass = (ngroup > 0)? "lil-gui closed": "lil-gui";
-                let lil_gui = creatediv(liclass, childrens[childrens.length-1]);
+            if (column.FieldName == "$start_group") {
+                const liclass = (ngroup > 0) ? "lil-gui closed" : "lil-gui";
+                let lil_gui = creatediv(liclass, childrens[childrens.length - 1]);
                 let button = creatediv("title", lil_gui, "button");
                 button.textContent = column.FieldCaption;
                 let child = creatediv("children", lil_gui);
@@ -77,8 +81,7 @@ class Editor {
                 return;
             }
 
-            if (column.FieldName == "$stop_group")
-            {
+            if (column.FieldName == "$stop_group") {
                 childrens.splice(-1, 1);
                 return;
             }
@@ -94,7 +97,7 @@ class Editor {
             }
 
 
-            let controller = creatediv(classController, childrens[childrens.length-1]);
+            let controller = creatediv(classController, childrens[childrens.length - 1]);
             let name = creatediv("name", controller);
             name.innerText = column.FieldCaption;
             let widget = creatediv("widget", controller);
@@ -119,11 +122,31 @@ class Editor {
             if (classController == "controller option") {
                 let classdisplay = "finder";
                 if (classname == "Bureau.GridCombo") {
-                    if (!mainObj.jsonData && column.joinRow.IdDeclare)
+                    //depend
+                    if (column.joinRow.params)
                     {
-                        column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, null);//this.getMid(column.joinRow.IdDeclare);    
+                        for (let par in column.joinRow.params) {
+                            const fname = column.joinRow.params[par];
+                            let da = this.dependencies.get(fname);
+                            if (da)
+                                da.push(column.joinRow.valField)
+                            else
+                                da = [column.joinRow.valField];  
+                            this.dependencies.set(fname, da);      
+                        } 
                     }
-                    
+                    if (!column.joinRow.FindConrol) {
+
+                        const TextParams = {};
+                        if (column.joinRow.params && manager.row) {
+                            for (let par in column.joinRow.params) {
+                                const fname = column.joinRow.params[par];
+                                TextParams[par] = manager.row[fname];
+                            }
+                        }
+                        column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, TextParams);
+                    }
+
                     classdisplay = "display";
                     inp = creatediv("", widget, "select");
                     column.joinRow.FindConrol.MainTab.forEach((e) => {
@@ -167,7 +190,7 @@ class Editor {
                         //await grid.start();
                         //column.joinRow.FindConrol = grid.mid;
                     }
-                    
+
                     //grid.updateTab();
                     let dialog;
                     let okfun = () => {
@@ -181,6 +204,7 @@ class Editor {
                             let f = column.joinRow.fields[s];
                             this.WorkRow[f] = row[s];
                             this.setVal(f);
+                            this.updateDepend(f);
                         }
                         dialog.close();
                     }
@@ -193,18 +217,53 @@ class Editor {
             }
 
             FCon.control = inp;
-            if (classname == "Bureau.GridCombo") {
-                this.FControls.set(column.joinRow.valField, FCon);
-                //console.log(column.joinRow.valField);
+            FCon.joinRow = column.joinRow;
+            let fname = (classname == "Bureau.GridCombo") ? column.joinRow.valField : column.FieldName;
+            this.FControls.set(fname, FCon);
+            if (manager.row) {
+                this.setVal(fname);
             }
-            else
-                this.FControls.set(column.FieldName, FCon);
+
+
         });
         //this.initialize(ReferEdit, element, manager);
         //console.log(this.FControls)    ;
 
     }
-    
+
+
+    updateCombo = async (column) => {
+        
+        if (!column.joinRow || !column.joinRow.params || column.control.tagName != "SELECT")
+            return;
+        
+        const TextParams = {};
+        for (let par in column.joinRow.params) {
+            const fname = column.joinRow.params[par];
+            TextParams[par] = this.WorkRow[fname];
+        }
+        const data = await mainObj.fetch(column.joinRow.IdDeclare, "data", null, TextParams);
+        console.log(data);
+        column.joinRow.FindConrol.MainTab = data.MainTab;
+        column.control.innerHTML = "";
+        column.joinRow.FindConrol.MainTab.forEach((e) => {
+            let opt = creatediv("", column.control, "option");
+            opt.value = e[column.joinRow.keyField];
+            opt.text = e[column.joinRow.FindConrol.DispField]
+        });
+
+    }
+
+    updateDepend = (fname) => {
+        const da = this.dependencies.get(fname);
+        if (!da)
+            return;
+        da.forEach(async (f) => {
+            const col = this.FControls.get(f);
+            await this.updateCombo(col);
+            this.setVal(f);
+        })    
+    }
 
     setVal = (FieldName) => {
         let column = this.FControls.get(FieldName);
@@ -222,7 +281,7 @@ class Editor {
         }
         column.control.value = dt;
 
-        
+
 
         if (column.display) {
             if (column.control.tagName == "SELECT") {
@@ -239,16 +298,12 @@ class Editor {
     }
 
     edit = (row) => {
-        while (this.loaded > 0)
-        {
-            ;
-        }
         this.WorkRow = {};
         for (let column in row) {
             this.WorkRow[column] = row[column] == null ? "" : row[column];
         }
-        this.FControls.forEach((column, FieldName) => {
-            
+        this.FControls.forEach(async (column, FieldName) => {
+            await this.updateCombo(column)
             this.setVal(FieldName);
         }
         )

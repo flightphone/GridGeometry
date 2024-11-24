@@ -103,7 +103,15 @@
     IdDeclareSet = agrid.mid.IdDeclareSet;
     if (EditProc) {
       editDialog = new ModalDialog(600, 900, save);
-      editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+      if (extparams.editorJson)
+      {
+        const resp = await fetch(extparams.editorJson);
+        const edJson = await resp.json();
+        editor = new Editor(edJson, editDialog.content, {});
+      }
+      else
+        editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+      
       extparams.onEnter = openEdit;
     }
 

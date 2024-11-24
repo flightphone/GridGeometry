@@ -17,6 +17,9 @@ let mainObj = {
     open: (id, link1, params, extparams = {}) => {
         if (!openMap.get(id)) {
             extparams.id = id;
+            if (link1 == "RegulationPrint.Refer.referExtTarif") {
+                extparams.editorJson = "/tmp/Editor1233.json";
+            }
             let c = mainObj.getForm(id, link1, params);
             if (c === "not implemented")
                 return;
@@ -48,13 +51,13 @@ let mainObj = {
     },
 
     sheme: "ag-theme-balham-dark",
-    
+
     dateformat: function (d, f) {
         if (d == null)
             return ""
-        if (!f) 
+        if (!f)
             return d;
-        
+
         if (f == "text" || f == "hide" || f == 'password' || f == 'disabled' || f == null || f == "")
             return d;
 
@@ -70,9 +73,8 @@ let mainObj = {
             if (n > 0) return Number(d.toString()).toFixed(n);
             else return d;
         }
-        
-        if (f.indexOf('dd.MM') > -1)
-        {
+
+        if (f.indexOf('dd.MM') > -1) {
             try {
                 f = f.replace("yyyy", d.substr(0, 4));
                 f = f.replace("yy", d.substr(2, 2));
@@ -92,7 +94,7 @@ let mainObj = {
     fetch: async (idDeclare, mode, SQLParams, TextParams) => {
         let mid;
         try {
-            
+
             if (mainObj.jsonData) {
                 const url = `/json_grids/FinderStart${idDeclare}.json`;
                 const response = await fetch(url);

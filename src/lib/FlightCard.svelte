@@ -13,8 +13,8 @@
     document.title = FC_flNumber;
     const response = await fetch("/tmp/Editor1636.json");
     const ReferEdit = await response.json();
-    editor = new Editor(ReferEdit, fcdiv, {});
-    editor.edit(data.MainTab[0]); 
+    editor = new Editor(ReferEdit, fcdiv, {row:data.MainTab[0]});
+    //editor.edit(data.MainTab[0]); 
     
   })
 </script>
