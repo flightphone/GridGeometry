@@ -3,24 +3,129 @@
   import { onMount } from "svelte";
   import { Editor } from "../models/Editor";
   import { Splitter } from "../models/Splitter";
+  import { GridGeometry } from "../models/GridGeometry";
   let { IdDeclare, extparams } = $props();
   let FC_PK = extparams.FC_PK;
   let FC_flNumber = $state("");
   let fcdiv;
   let editor;
   let split;
-  onMount (async () => {
-    let data = await mainObj.fetch(1636, "data", null, {FC_PK:FC_PK})
-    FC_flNumber = data.MainTab[0]["FC_flNumber"] + " " + data.MainTab[0]["FC_Date"].substring(0, 10);
+  let adiv;
+  let agrid;
+  let info;
+
+  let tdiv;
+  let tgrid;
+  
+
+  openMap.get(extparams.id).toggle_shema = () => {
+    adiv.classList.toggle("ag-theme-balham-dark");
+    adiv.classList.toggle("ag-theme-balham");
+  };
+
+  onMount(async () => {
+    let data = await mainObj.fetch(1636, "data", null, { FC_PK: FC_PK });
+    FC_flNumber =
+      data.MainTab[0]["FC_flNumber"] +
+      " " +
+      data.MainTab[0]["FC_Date"].substring(0, 10);
     document.title = FC_flNumber;
     const response = await fetch("/tmp/Editor1636.json");
     const ReferEdit = await response.json();
     const sp = new Splitter(split, fcdiv, "col");
-    editor = new Editor(ReferEdit, fcdiv, {row:data.MainTab[0]});
-    
-    //editor.edit(data.MainTab[0]); 
-    
-  })
+    editor = new Editor(ReferEdit, fcdiv, { row: data.MainTab[0] });
+    const agridParam = {
+      TextParams: {
+        FC_PK: data.MainTab[0]["FC_PK"],
+      },
+      onSelect: (ev) => {
+        if (ev.node.isSelected()) info.textContent = ev.data["Descr"].substring(0, 100);
+      },
+      gridOptions: {
+        pagination: false,
+        columnDefs: [
+          {
+            field: "NN",
+            headerName: "NN",
+            width: 50,
+            filter: false,
+          },
+          {
+            field: "Caption",
+            headerName: "Name",
+            flex: 2,
+          },
+          {
+            field: "QD_QTY",
+            headerName: "Qty",
+            editable: true,
+            width: 50,
+            cellDataType: "number",
+            filter: false,
+            sortable: false,
+          },
+          {
+            field: "QD_Comment",
+            headerName: "Comment",
+            flex: 1,
+            editable: true,
+          },
+          {
+            field: "SV_RespRoleInfo",
+            headerName: "Responsible",
+            flex: 1,
+          },
+          {
+            field: "QD_isPosted",
+            headerName: " ",
+            width: 40,
+            editable: true,
+            cellEditor: "agCheckboxCellEditor",
+            cellDataType: "boolean",
+            sortable: false,
+            filter: false,
+            resizable: false,
+          },
+          {
+            field: "SV_CATEGORY",
+            hide: true,
+          },
+        ],
+      },
+    };
+    agrid = new GridGeometry("1638", adiv, agridParam);
+    agrid.gridApi.setFilterModel({
+      SV_CATEGORY: {
+        filterType: "number",
+        type: "lessThan",
+        filter: 1,
+      },
+    });
+
+    await agrid.start();
+    if (agrid.mid.Error) {
+      mainObj.alert(agrid.mid.Error);
+      return;
+    }
+    agrid.init();
+
+    tgrid = new GridGeometry("1639", tdiv, {
+      TextParams: {
+        FLT_ID: data.MainTab[0]["FLT_ID"],
+      },
+      gridOptions: {
+        pagination: false
+      }
+    });
+    await tgrid.start();
+    if (tgrid.mid.Error) {
+      mainObj.alert(tgrid.mid.Error);
+      return;
+    }
+    tgrid.init();
+
+    //editor.edit(data.MainTab[0]);
+  });
 </script>
 
 <div class="mainapp">
@@ -32,18 +137,62 @@
         <i class="material-icons">save</i>
       </button>
     </div>
+
+    
   </div>
-  <div style="height:calc(100% - 60px); margin: 3px;border: 1px solid gray; display: flex;
+  <div
+    style="height:calc(100% - 60px); margin: 3px;border: 1px solid gray; display: flex;
   flex-direction: row;"
   >
-  <!--height:calc(100% - 6px)-->
-    <div bind:this={fcdiv} style="width:300px; margin: 3px 0px 3px 3px;border: 1px solid gray;height:calc(100% - 6px)">
+    <!--height:calc(100% - 6px)-->
+    <div
+      bind:this={fcdiv}
+      style="width:300px; margin: 0px 0px 0px 3px;height:calc(100%)"
+    ></div>
+    <div bind:this={split} style="width:8px; background:lightgray"></div>
 
+    <div style="flex-grow: 1; margin: 3px 3px 3px 0px; ">
+      <div
+        class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect"
+        style="height: 100%"
+      >
+        <div class="mdl-tabs__tab-bar" style="justify-content: start;">
+          <a href="#starks-panel" class="mdl-tabs__tab is-active">service</a>
+          <a href="#lannisters-panel" class="mdl-tabs__tab">tasks</a>
+          <!--<a href="#targaryens-panel" class="mdl-tabs__tab">de-icing</a>-->
+        </div>
 
-    </div>
-    <div bind:this={split} style="width:5px; background:lightgray"></div>    
-    <div style="flex-grow: 1; margin: 3px 3px 3px 0px;border: 1px solid gray; ">
-
+        <div
+          class="mdl-tabs__panel is-active"
+          id="starks-panel"
+          style="height: calc(100% - 50px);"
+        >
+          <div style="display:flex;flex-direction: column;height:100%">
+            <div
+              bind:this={adiv}
+              class={mainObj.sheme}
+              style="flex-grow: 1"
+            ></div>
+            <div style="height:20px;overflow:hidden;max-width:90%">
+              <div bind:this={info} style="margin-left:10px;width:90%;overflow:hidden;"
+                ></div>
+            </div>
+          </div>
+        </div>
+        <div class="mdl-tabs__panel" id="lannisters-panel"  style="height: calc(100% - 50px);">
+          <div
+              bind:this={tdiv}
+              class={mainObj.sheme}
+              style="height: 100%"
+            ></div>
+        </div>
+        <div class="mdl-tabs__panel" id="targaryens-panel">
+          <ul>
+            <li>Viserys</li>
+            <li>Daenerys</li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>

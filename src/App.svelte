@@ -12,7 +12,7 @@
   let smenu = true;
   let dialog;
   let treediv;
-  let mode = "wb_sunny"; //"brightness_2";
+  let mode = (mainObj.sheme == "ag-theme-balham-dark") ? "wb_sunny" : "brightness_2";
   let title = "Main Menu";
 
   let currentActive = "-1";
@@ -33,6 +33,7 @@
       mainObj.sheme == "ag-theme-balham-dark"
         ? "ag-theme-balham"
         : "ag-theme-balham-dark";
+    localStorage.sheme = mainObj.sheme;    
     mainObj.alarm("toggle_shema");
   }
 
@@ -88,7 +89,7 @@
       <i class="material-icons">menu</i>
     </button>
   </div>
-  {/if}
+  
   
   <div class="menubut2">
     <button
@@ -98,7 +99,7 @@
       <i class="material-icons">{mode}</i>
     </button>
   </div>
-
+  {/if}
   <dialog bind:this={dialog} class="modal">
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"

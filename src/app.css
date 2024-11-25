@@ -84,7 +84,13 @@
   color:  var(--dark-color);
 }
 
+.dark .mdl-tabs__tab {
+  color:  lightgrey;
+}
 
+.dark .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active {
+  color:  var(--dark-color);
+}
 
 
 body {
@@ -99,6 +105,7 @@ body {
   align-items: center;
   width: 100%;
   height: 60px;
+  
 }
 .appbar1 {
   display: flex;

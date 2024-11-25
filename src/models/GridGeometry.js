@@ -51,18 +51,13 @@ class GridGeometry {
             pagination: true,
             suppressExcelExport: true,
 
-            /*   
-            onCellFocused: (e) => {
-                try {
-                  console.log(e);  
-                  let rw = e.api.rowModel.rowsToDisplay[e.rowIndex];
-                  rw.setSelected(true);
-                }
-                catch {;}
-            },
-            */
+
 
         };
+        if (extparams.gridOptions) {
+            for (let par in extparams.gridOptions)
+                this.gridOptions[par] = extparams.gridOptions[par];
+        }
         this.gridApi = createGrid(el, this.gridOptions);
     }
 
@@ -71,13 +66,16 @@ class GridGeometry {
     }
 
     init = () => {
-        let columnDefs = [];
-        this.mid.Fcols.forEach(el => {
-            if (el.Visible) {
-                columnDefs.push({ field: el.FieldName, headerName: el.FieldCaption, valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat) })
-            }
-        });
-        this.gridApi.setGridOption("columnDefs", columnDefs);
+        if (!this.gridOptions.columnDefs) {
+            let columnDefs = [];
+            this.mid.Fcols.forEach(el => {
+                if (el.Visible) {
+                    columnDefs.push({ field: el.FieldName, headerName: el.FieldCaption, valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat) })
+                }
+            });
+            //console.log(columnDefs);
+            this.gridApi.setGridOption("columnDefs", columnDefs);
+        }
         this.gridApi.setGridOption("rowData", this.mid.MainTab);
         this.inited = true;
     }

@@ -4,6 +4,10 @@ const back_url = 'http://127.0.0.1:5000/';
 let openMap = new Map();
 let openIDs = []
 
+let sheme = localStorage.sheme ? localStorage.sheme : "ag-theme-balham-dark";
+if (sheme == "ag-theme-balham")
+    document.querySelector("BODY").classList.toggle("dark");
+
 let mainObj = {
     jsonData: true,
     baseUrl: ((prodaction) ? '' : back_url),
@@ -50,7 +54,7 @@ let mainObj = {
         });
     },
 
-    sheme: "ag-theme-balham-dark",
+    sheme: sheme,//"ag-theme-balham-dark",
 
     dateformat: function (d, f) {
         if (d == null)
