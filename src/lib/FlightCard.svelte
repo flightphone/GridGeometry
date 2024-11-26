@@ -4,6 +4,8 @@
   import { Editor } from "../models/Editor";
   import { Splitter } from "../models/Splitter";
   import { GridGeometry } from "../models/GridGeometry";
+  import { ModalDialog } from "../models/ModalDialog";
+  import PaxFmcy from "./PaxFMCY.svelte";
   let { IdDeclare, extparams } = $props();
   let FC_PK = extparams.FC_PK;
   let FC_flNumber = $state("");
@@ -16,7 +18,14 @@
 
   let tdiv;
   let tgrid;
-  
+
+  let pdiv;
+  let pdialog;
+  let s23 = $state(false);
+
+  let showPax = (e) => {
+    pdialog.showModal();
+  };
 
   openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
@@ -24,6 +33,9 @@
   };
 
   onMount(async () => {
+    pdialog = new ModalDialog("80%", "90%");
+    pdialog.content.appendChild(pdiv);
+
     let data = await mainObj.fetch(1636, "data", null, { FC_PK: FC_PK });
     FC_flNumber =
       data.MainTab[0]["FC_flNumber"] +
@@ -39,7 +51,14 @@
         FC_PK: data.MainTab[0]["FC_PK"],
       },
       onSelect: (ev) => {
-        if (ev.node.isSelected()) info.textContent = ev.data["Descr"].substring(0, 100);
+        if (ev.node.isSelected())
+          info.textContent = ev.data["Descr"].substring(0, 100);
+      },
+      onEnter: (data) => {
+        //console.log(data);
+        if (data["ClassName"] == "RegulationPrint.UTGPaxFMCY") {
+          pdialog.showModal();
+        }
       },
       gridOptions: {
         pagination: false,
@@ -108,14 +127,18 @@
       return;
     }
     agrid.init();
+    agrid.mid.MainTab.forEach((data) => {
+      if (data["ClassName"] == "RegulationPrint.UTGPaxFMCY")
+        s23 = true;
+    })
 
     tgrid = new GridGeometry("1639", tdiv, {
       TextParams: {
         FLT_ID: data.MainTab[0]["FLT_ID"],
       },
       gridOptions: {
-        pagination: false
-      }
+        pagination: false,
+      },
     });
     await tgrid.start();
     if (tgrid.mid.Error) {
@@ -128,9 +151,14 @@
   });
 </script>
 
+<div bind:this={pdiv}>
+  {#if s23}
+    <PaxFmcy FC_PK={extparams.FC_PK} />
+  {/if}
+</div>
 <div class="mainapp">
   <div class="appbar1">
-    <div class="but" title="add record">
+    <div class="but" title="save record">
       <button
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
       >
@@ -138,7 +166,14 @@
       </button>
     </div>
 
-    
+    <div class="but" title="add record">
+      <button
+        on:click={showPax}
+        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
+      >
+        <i class="material-icons">add</i>
+      </button>
+    </div>
   </div>
   <div
     style="height:calc(100% - 60px); margin: 3px;border: 1px solid gray; display: flex;
@@ -173,18 +208,29 @@
               class={mainObj.sheme}
               style="flex-grow: 1"
             ></div>
-            <div style="height:20px;overflow:hidden;max-width:90%">
-              <div bind:this={info} style="margin-left:10px;width:90%;overflow:hidden;"
-                ></div>
+            <div
+              style="height:28px;overflow:hidden;max-width:100%;display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;"
+            >
+              <div
+                bind:this={info}
+                style="margin-right:10px;max-width:99%;overflow:hidden;"
+              ></div>
             </div>
           </div>
         </div>
-        <div class="mdl-tabs__panel" id="lannisters-panel"  style="height: calc(100% - 50px);">
+        <div
+          class="mdl-tabs__panel"
+          id="lannisters-panel"
+          style="height: calc(100% - 50px);"
+        >
           <div
-              bind:this={tdiv}
-              class={mainObj.sheme}
-              style="height: 100%"
-            ></div>
+            bind:this={tdiv}
+            class={mainObj.sheme}
+            style="height: 100%"
+          ></div>
         </div>
         <div class="mdl-tabs__panel" id="targaryens-panel">
           <ul>

@@ -102,7 +102,7 @@
     KeyValue = agrid.mid.KeyValue;
     IdDeclareSet = agrid.mid.IdDeclareSet;
     if (EditProc) {
-      editDialog = new ModalDialog(600, 900, save);
+      editDialog = new ModalDialog("600px", "900px", save);
       if (extparams.editorJson)
       {
         const resp = await fetch(extparams.editorJson);
@@ -120,7 +120,7 @@
     }
 
     if (IdDeclareSet) {
-      settingDialog = new ModalDialog(200, 700, saveSetting);
+      settingDialog = new ModalDialog("200px", "700px", saveSetting);
       setting = new Editor(
         agrid.mid.Setting.ReferEdit,
         settingDialog.content,

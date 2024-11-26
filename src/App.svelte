@@ -6,6 +6,7 @@
   import Dogovors from "./lib/Dogovors.svelte";
   import FlightCard from "./lib/FlightCard.svelte";
   import FlightCardsList from "./lib/FlightCardsList.svelte";
+  import PaxFmcy from "./lib/PaxFMCY.svelte";
   import { mainObj, openMap, openIDs } from "./store";
 
 
@@ -134,7 +135,9 @@
       </div>
     </div>
   </dialog>
-
+  <!--
+  <PaxFmcy FC_PK="AAA"></PaxFmcy>
+  -->
   {#each opens as e}
     <div hidden={e != currentActive}>
       <svelte:component

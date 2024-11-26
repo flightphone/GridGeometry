@@ -28,7 +28,7 @@ class GridGeometry {
             onCellKeyDown: (e) => {
                 if (e.event.code == "Enter" && this.extparams.onEnter) {
                     e.node.setSelected(true);
-                    this.extparams.onEnter();
+                    this.extparams.onEnter(e.node.data);
                 }
                 if (e.event.code == "Delete" && this.extparams.onDelete) {
                     e.node.setSelected(true);
@@ -38,7 +38,7 @@ class GridGeometry {
             onCellDoubleClicked: (e) => {
                 if (this.extparams.onEnter) {
                     e.node.setSelected(true);
-                    this.extparams.onEnter();
+                    this.extparams.onEnter(e.node.data);
                 }
             },
 

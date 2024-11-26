@@ -209,7 +209,7 @@ class Editor {
                         dialog.close();
                     }
                     gridManager.onEnter = okfun;
-                    dialog = new ModalDialog(500, 800, okfun);
+                    dialog = new ModalDialog("500px", "800px", okfun);
                     dialog.content.appendChild(cnt);
                     inp.dialog = dialog;
                     inp.grid = grid;
