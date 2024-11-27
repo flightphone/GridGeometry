@@ -112,6 +112,7 @@
       else
         editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
       
+      
       extparams.onEnter = openEdit;
     }
 

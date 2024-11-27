@@ -6,7 +6,7 @@
   import Dogovors from "./lib/Dogovors.svelte";
   import FlightCard from "./lib/FlightCard.svelte";
   import FlightCardsList from "./lib/FlightCardsList.svelte";
-  import PaxFmcy from "./lib/PaxFMCY.svelte";
+  import CargoPost from "./lib/CargoPost.svelte";
   import { mainObj, openMap, openIDs } from "./store";
 
 
@@ -136,10 +136,11 @@
     </div>
   </dialog>
 <!--
-  <div style="width:700px; height:300px">
-  <PaxFmcy FC_PK="7a1cb1b0-04b9-4431-93f1-8e8de69e3e02"></PaxFmcy>
+  <div style="width:95%; height:300px">
+  <CargoPost QD_PK="F3053171-EBE8-47EC-9D4E-1CF6309862F5"></CargoPost>
    </div>
-   -->
+-->   
+   
   
   
   {#each opens as e}

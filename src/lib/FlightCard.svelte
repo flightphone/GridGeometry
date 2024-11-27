@@ -7,6 +7,7 @@
   import { ModalDialog } from "../models/ModalDialog";
   import PaxFmcy from "./PaxFMCY.svelte";
   import Cargo from "./Cargo.svelte";
+  import CargoPost from "./CargoPost.svelte";
   let { IdDeclare, extparams } = $props();
   let FC_PK = extparams.FC_PK;
   let FC_flNumber = $state("");
@@ -27,6 +28,10 @@
   let cdialog;
 
   let s756 = $state(false);
+  let QD_PK;
+
+  let sdiv;
+  let sdialog;
 
   let showPax = (e) => {
     pdialog.showModal();
@@ -43,6 +48,9 @@
 
     cdialog = new ModalDialog("300px", "450px");
     cdialog.content.appendChild(cdiv);
+
+    sdialog = new ModalDialog("300px", "95%");
+    sdialog.content.appendChild(sdiv);
 
     let data = await mainObj.fetch(1636, "data", null, { FC_PK: FC_PK });
     FC_flNumber =
@@ -70,6 +78,10 @@
 
         if (data["ClassName"] == "RegulationPrint.UTGCargo") {
           cdialog.showModal();
+        }
+
+        if (data["ClassName"] == "RegulationPrint.UTGCargoPost") {
+          sdialog.showModal();
         }
       },
       gridOptions: {
@@ -140,9 +152,11 @@
     }
     agrid.init();
     agrid.mid.MainTab.forEach((data) => {
-      if (data["ClassName"] == "RegulationPrint.UTGCargoPost")
+      if (data["ClassName"] == "RegulationPrint.UTGCargoPost") {
+        QD_PK = data["QD_PK"];
         s756 = true;
-    })
+      }
+    });
 
     tgrid = new GridGeometry("1639", tdiv, {
       TextParams: {
@@ -164,10 +178,16 @@
 </script>
 
 <div bind:this={pdiv} style="height:100%; width:100%">
-    <PaxFmcy FC_PK={extparams.FC_PK} />
+  <PaxFmcy FC_PK={extparams.FC_PK} />
 </div>
 <div bind:this={cdiv} style="height:100%; width:100%">
   <Cargo FC_PK={extparams.FC_PK} />
+</div>
+
+<div bind:this={sdiv} style="height:100%; width:100%">
+  {#if s756}
+    <CargoPost {QD_PK} />
+  {/if}
 </div>
 
 <div class="mainapp">
