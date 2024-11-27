@@ -6,6 +6,7 @@
   import { GridGeometry } from "../models/GridGeometry";
   import { ModalDialog } from "../models/ModalDialog";
   import PaxFmcy from "./PaxFMCY.svelte";
+  import Cargo from "./Cargo.svelte";
   let { IdDeclare, extparams } = $props();
   let FC_PK = extparams.FC_PK;
   let FC_flNumber = $state("");
@@ -21,7 +22,11 @@
 
   let pdiv;
   let pdialog;
-  let s23 = $state(false);
+
+  let cdiv;
+  let cdialog;
+
+  let s756 = $state(false);
 
   let showPax = (e) => {
     pdialog.showModal();
@@ -33,8 +38,11 @@
   };
 
   onMount(async () => {
-    pdialog = new ModalDialog("80%", "90%");
+    pdialog = new ModalDialog("300px", "750px");
     pdialog.content.appendChild(pdiv);
+
+    cdialog = new ModalDialog("300px", "450px");
+    cdialog.content.appendChild(cdiv);
 
     let data = await mainObj.fetch(1636, "data", null, { FC_PK: FC_PK });
     FC_flNumber =
@@ -58,6 +66,10 @@
         //console.log(data);
         if (data["ClassName"] == "RegulationPrint.UTGPaxFMCY") {
           pdialog.showModal();
+        }
+
+        if (data["ClassName"] == "RegulationPrint.UTGCargo") {
+          cdialog.showModal();
         }
       },
       gridOptions: {
@@ -128,8 +140,8 @@
     }
     agrid.init();
     agrid.mid.MainTab.forEach((data) => {
-      if (data["ClassName"] == "RegulationPrint.UTGPaxFMCY")
-        s23 = true;
+      if (data["ClassName"] == "RegulationPrint.UTGCargoPost")
+        s756 = true;
     })
 
     tgrid = new GridGeometry("1639", tdiv, {
@@ -151,11 +163,13 @@
   });
 </script>
 
-<div bind:this={pdiv}>
-  {#if s23}
+<div bind:this={pdiv} style="height:100%; width:100%">
     <PaxFmcy FC_PK={extparams.FC_PK} />
-  {/if}
 </div>
+<div bind:this={cdiv} style="height:100%; width:100%">
+  <Cargo FC_PK={extparams.FC_PK} />
+</div>
+
 <div class="mainapp">
   <div class="appbar1">
     <div class="but" title="save record">
@@ -168,7 +182,6 @@
 
     <div class="but" title="add record">
       <button
-        on:click={showPax}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
       >
         <i class="material-icons">add</i>

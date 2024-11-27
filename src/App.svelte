@@ -135,9 +135,13 @@
       </div>
     </div>
   </dialog>
-  <!--
-  <PaxFmcy FC_PK="AAA"></PaxFmcy>
-  -->
+<!--
+  <div style="width:700px; height:300px">
+  <PaxFmcy FC_PK="7a1cb1b0-04b9-4431-93f1-8e8de69e3e02"></PaxFmcy>
+   </div>
+   -->
+  
+  
   {#each opens as e}
     <div hidden={e != currentActive}>
       <svelte:component
