@@ -6,12 +6,18 @@ class GridGeometry {
         this.inited = false;
         this.idDeclare = idDeclare;
         this.extparams = extparams;
+
+        this.localParam = `FindGrid${idDeclare}`;
+        
+
         this.gridOptions = {
             rowSelection: {
                 mode: "singleRow",
                 checkboxes: false,
                 enableClickSelection: true,
             },
+
+            
 
             onRowSelected: (ev) => {
                 if (this.extparams.onSelect)
@@ -42,6 +48,7 @@ class GridGeometry {
                 }
             },
 
+            
             defaultColDef: {
                 sortable: true,
                 filter: true,
@@ -70,13 +77,34 @@ class GridGeometry {
             let columnDefs = [];
             this.mid.Fcols.forEach(el => {
                 if (el.Visible) {
-                    columnDefs.push({ field: el.FieldName, headerName: el.FieldCaption, valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat) })
+                    
+                    let col = { 
+                        field: el.FieldName, 
+                        headerName: el.FieldCaption, 
+                        valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat) 
+                    };
+                    let key = `${this.localParam}_width_${el.FieldName}`;
+                    let val = localStorage.getItem(key);
+                    if (val)
+                        col.width = val;
+                    columnDefs.push(col)
                 }
             });
             //console.log(columnDefs);
             this.gridApi.setGridOption("columnDefs", columnDefs);
         }
         this.gridApi.setGridOption("rowData", this.mid.MainTab);
+        //save width
+        let wcols = this.gridApi.getColumns();
+        wcols.forEach((col) => {
+            col.addEventListener('widthChanged', (e)=> {
+                //console.log(e);
+                let key = `${this.localParam}_width_${e.column.colId}`;
+                let val = e.column.actualWidth;
+                localStorage.setItem(key, val);
+            });
+
+        });
         this.inited = true;
     }
 
