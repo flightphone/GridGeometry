@@ -42,14 +42,35 @@
     adiv.classList.toggle("ag-theme-balham");
   };
 
+  let okfun = () => {
+    let rs = agrid.gridApi.getSelectedNodes();
+    if (!rs[0]) {
+      mainObj.alert("not selected row");
+      return;
+    }
+    let row = rs[0].data;
+    row["QD_QTY"] = 1;
+    row["QD_isPosted"] = true;
+    rs[0].setData(row);
+  };
+
   onMount(async () => {
-    pdialog = new ModalDialog("300px", "750px");
+    pdialog = new ModalDialog("300px", "750px", () => {
+      pdialog.close();
+      okfun();
+    });
     pdialog.content.appendChild(pdiv);
 
-    cdialog = new ModalDialog("300px", "450px");
+    cdialog = new ModalDialog("300px", "450px", () => {
+      cdialog.close();
+      okfun();
+    });
     cdialog.content.appendChild(cdiv);
 
-    sdialog = new ModalDialog("300px", "95%");
+    sdialog = new ModalDialog("300px", "95%", () => {
+      sdialog.close();
+      okfun();
+    });
     sdialog.content.appendChild(sdiv);
 
     let data = await mainObj.fetch(1636, "data", null, { FC_PK: FC_PK });
@@ -92,6 +113,12 @@
             headerName: "NN",
             width: 50,
             filter: false,
+            cellStyle: (e) => {
+              if (e.data["SV_IsRequired"] == 1 && !e.data["QD_isPosted"]) {
+                return { backgroundColor: "coral" };
+              }
+              return null;
+            },
           },
           {
             field: "Caption",
@@ -101,11 +128,12 @@
           {
             field: "QD_QTY",
             headerName: "Qty",
-            editable: true,
+            //editable: true,
             width: 50,
             cellDataType: "number",
             filter: false,
             sortable: false,
+            editable: (e) => {return (e.data["ClassName"] == "RegulationPrint.UTGService")}
           },
           {
             field: "QD_Comment",
@@ -134,6 +162,31 @@
             hide: true,
           },
         ],
+        onCellEditingStopped: (e) => {
+          //console.log(e);
+          if (e.column.colId!="QD_isPosted")
+            e.data["QD_isPosted"] = true;
+          e.node.setData(e.data);
+          e.api.redrawRows({ rowNodes: [e.node] });
+          e.api.setFocusedCell(e.rowIndex, e.column.colId);
+
+          /*
+          setFocusedCell = (
+    rowIndex: number,
+    colKey: string  |  Column,
+    rowPinned?: RowPinnedType
+) => void;
+          */  
+          //e.node.setSelected(true);
+          //agrid.gridApi.refreshCells();
+          /*
+          e.api.refreshCells({
+            force: true,
+            suppressFlash: true
+            
+          });
+          */
+        },
       },
     };
     agrid = new GridGeometry("1638", adiv, agridParam);
