@@ -41,6 +41,15 @@
             if (e.rowIndex == agrid.mid.MainTab.length - 1)
                 newRow();
         },
+        onCellKeyDown: (e) => {
+          if (e.rowIndex == agrid.mid.MainTab.length - 1)
+            return;
+          if (e.event.code == "Delete" && (e.event.altKey || e.event.ctrlKey || e.event.shiftKey))
+          {
+            agrid.mid.MainTab.splice(e.rowIndex, 1);
+            agrid.gridApi.setGridOption("rowData", agrid.mid.MainTab);
+          }
+        }
       },
     };
     agrid = new GridGeometry(1215, adiv, agridParam);
@@ -50,6 +59,18 @@
       return;
     }
     agrid.init();
+    /*
+    let columnDefs = agrid.gridApi.getGridOption("columnDefs");
+    columnDefs.push({
+      field: "Action",
+      headerName: " ",
+      cellRenderer: (e) => {return "<button>&#10005;</button>"}, 
+      editable: false,
+      width: 10,
+      
+    })
+    agrid.gridApi.setGridOption("columnDefs", columnDefs);
+    */
     newRow();
   });
 </script>
