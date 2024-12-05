@@ -55,11 +55,12 @@
   };
 
   onMount(async () => {
+  
     pdialog = new ModalDialog("300px", "750px", () => {
       pdialog.close();
       okfun();
     });
-    pdialog.content.appendChild(pdiv);
+    pdialog.content.appendChild(pdiv); 
 
     cdialog = new ModalDialog("300px", "450px", () => {
       cdialog.close();
@@ -79,7 +80,7 @@
       " " +
       data.MainTab[0]["FC_Date"].substring(0, 10);
     document.title = FC_flNumber;
-    const response = await fetch("/tmp/Editor1636.json");
+    const response = await fetch("./tmp/Editor1636.json");
     const ReferEdit = await response.json();
     const sp = new Splitter(split, fcdiv, "col");
     editor = new Editor(ReferEdit, fcdiv, { row: data.MainTab[0] });

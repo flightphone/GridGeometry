@@ -68,8 +68,8 @@
     }
 
     //let url = mainObj.baseUrl + "ustore/gettree";
-    let url = "/tmp/tree.json";
-    if (mainObj.jsonData) url = "/json_grids/gettree.json";
+    let url = "./tmp/tree.json";
+    if (mainObj.jsonData) url = "./json_grids/gettree.json";
 
     const res = await fetch(url);
     const data = await res.json();

@@ -22,7 +22,7 @@ let mainObj = {
         if (!openMap.get(id)) {
             extparams.id = id;
             if (link1 == "RegulationPrint.Refer.referExtTarif") {
-                extparams.editorJson = "/tmp/Editor1233.json";
+                extparams.editorJson = "./tmp/Editor1233.json";
             }
             let c = mainObj.getForm(id, link1, params);
             if (c === "not implemented")
@@ -100,7 +100,7 @@ let mainObj = {
         try {
 
             if (mainObj.jsonData) {
-                const url = `/json_grids/FinderStart${idDeclare}.json`;
+                const url = `./json_grids/FinderStart${idDeclare}.json`;
                 const response = await fetch(url);
                 mid = await response.json();
             }

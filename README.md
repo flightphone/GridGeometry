@@ -15,7 +15,7 @@ npm run build
 Ag-Grid and CRUD example
 
 
-Live Demo: https://flightphone.github.io/grids.html#124
+Live Demo: https://flightphone.github.io/grids/index.html#124
 
 
 # Svelte + Vite
