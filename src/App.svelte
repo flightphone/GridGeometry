@@ -6,7 +6,7 @@
   import Dogovors from "./lib/Dogovors.svelte";
   import FlightCard from "./lib/FlightCard.svelte";
   import FlightCardsList from "./lib/FlightCardsList.svelte";
-  import CargoPost from "./lib/CargoPost.svelte";
+  import Air from "./lib/Air.svelte";
   import { mainObj, openMap, openIDs } from "./store";
 
 
@@ -39,6 +39,7 @@
   }
 
   mainObj.getForm = (id, link1, params) => {
+    if (id == "32") return Air;
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;

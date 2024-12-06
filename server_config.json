@@ -1,0 +1,3 @@
+{
+    "connectionString": "UID=sa;PWD=aA12345678;SERVER=localhost\\SQLEXPRESS;DATABASE=uFlights;Driver={SQL Server Native Client 10.0}"
+}
