@@ -1,5 +1,5 @@
 const prodaction = false;
-const back_url = 'http://127.0.0.1:5000/';
+const back_url = 'http://localhost:1793';
 
 let openMap = new Map();
 let openIDs = []
@@ -9,7 +9,7 @@ if (sheme == "ag-theme-balham")
     document.querySelector("BODY").classList.toggle("dark");
 
 let mainObj = {
-    jsonData: true,
+    jsonData: false,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {
@@ -105,7 +105,8 @@ let mainObj = {
                 mid = await response.json();
             }
             else {
-                const url = `${mainObj.baseUrl}React/FinderStart`;
+                /*
+                const url = `${mainObj.baseUrl}/FinderStart`;
                 const bd = new FormData();
                 bd.append("id", idDeclare);
                 bd.append("mode", mode);
@@ -117,6 +118,23 @@ let mainObj = {
                     body: bd,
                     cache: "no-cache",
                     //credentials: "include",
+                });
+                */
+                const url = `${mainObj.baseUrl}/grid`;
+                let query = {
+                    id: idDeclare,
+                    mode: mode
+                }
+
+                if (SQLParams) query.SQLParams = SQLParams;
+                if (TextParams) query.TextParams = TextParams;
+
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify(query),
                 });
                 mid = await response.json();
             }

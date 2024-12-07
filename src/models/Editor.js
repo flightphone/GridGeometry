@@ -144,7 +144,7 @@ class Editor {
                                 TextParams[par] = manager.row[fname];
                             }
                         }
-                        column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", null, TextParams);
+                        column.joinRow.FindConrol = await mainObj.fetch(column.joinRow.IdDeclare, "new", TextParams, TextParams);
                     }
 
                     classdisplay = "display";
@@ -242,7 +242,7 @@ class Editor {
             const fname = column.joinRow.params[par];
             TextParams[par] = this.WorkRow[fname];
         }
-        const data = await mainObj.fetch(column.joinRow.IdDeclare, "data", null, TextParams);
+        const data = await mainObj.fetch(column.joinRow.IdDeclare, "data", TextParams, TextParams);
         console.log(data);
         column.joinRow.FindConrol.MainTab = data.MainTab;
         column.control.innerHTML = "";

@@ -137,7 +137,7 @@ class GridGeometry {
         let iddeclare = this.mid.KeyValue;
         let title = rw[this.mid.DispField] + ' (detail) ';
         let newid = this.idDeclare + "_" + rw[this.mid.KeyF];
-        mainObj.open(newid, "Bureau.Finder", iddeclare, { TextParams: TextParams, title: title });
+        mainObj.open(newid, "Bureau.Finder", iddeclare, { SQLParams: TextParams, TextParams: TextParams, title: title });
     };
 
 
