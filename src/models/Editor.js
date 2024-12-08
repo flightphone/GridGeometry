@@ -243,7 +243,7 @@ class Editor {
             TextParams[par] = this.WorkRow[fname];
         }
         const data = await mainObj.fetch(column.joinRow.IdDeclare, "data", TextParams, TextParams);
-        console.log(data);
+        //console.log(data);
         column.joinRow.FindConrol.MainTab = data.MainTab;
         column.control.innerHTML = "";
         column.joinRow.FindConrol.MainTab.forEach((e) => {

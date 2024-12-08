@@ -55,12 +55,11 @@
   };
 
   onMount(async () => {
-  
     pdialog = new ModalDialog("300px", "750px", () => {
       pdialog.close();
       okfun();
     });
-    pdialog.content.appendChild(pdiv); 
+    pdialog.content.appendChild(pdiv);
 
     cdialog = new ModalDialog("300px", "450px", () => {
       cdialog.close();
@@ -134,7 +133,9 @@
             cellDataType: "number",
             filter: false,
             sortable: false,
-            editable: (e) => {return (e.data["ClassName"] == "RegulationPrint.UTGService")}
+            editable: (e) => {
+              return e.data["ClassName"] == "RegulationPrint.UTGService";
+            },
           },
           {
             field: "QD_Comment",
@@ -165,28 +166,10 @@
         ],
         onCellEditingStopped: (e) => {
           //console.log(e);
-          if (e.column.colId!="QD_isPosted")
-            e.data["QD_isPosted"] = true;
+          if (e.column.colId != "QD_isPosted") e.data["QD_isPosted"] = true;
           e.node.setData(e.data);
           e.api.redrawRows({ rowNodes: [e.node] });
           e.api.setFocusedCell(e.rowIndex, e.column.colId);
-
-          /*
-          setFocusedCell = (
-    rowIndex: number,
-    colKey: string  |  Column,
-    rowPinned?: RowPinnedType
-) => void;
-          */  
-          //e.node.setSelected(true);
-          //agrid.gridApi.refreshCells();
-          /*
-          e.api.refreshCells({
-            force: true,
-            suppressFlash: true
-            
-          });
-          */
         },
       },
     };
@@ -245,6 +228,7 @@
 </div>
 
 <div class="mainapp">
+  <!--
   <div class="appbar1">
     <div class="but" title="save record">
       <button
@@ -262,8 +246,9 @@
       </button>
     </div>
   </div>
+  -->
   <div
-    style="height:calc(100% - 60px); margin: 3px;border: 1px solid gray; display: flex;
+    style="height:calc(100% - 6px); margin: 3px;border: 1px solid gray; display: flex;
   flex-direction: row;"
   >
     <!--height:calc(100% - 6px)-->
@@ -282,6 +267,28 @@
           <a href="#starks-panel" class="mdl-tabs__tab is-active">service</a>
           <a href="#lannisters-panel" class="mdl-tabs__tab">tasks</a>
           <!--<a href="#targaryens-panel" class="mdl-tabs__tab">de-icing</a>-->
+          <div
+            style="flex-grow: 1;display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;"
+          >
+            <div class="but" title="save record">
+              <button
+                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
+              >
+                <i class="material-icons">save</i>
+              </button>
+            </div>
+
+            <div class="but" title="add record">
+              <button
+                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
+              >
+                <i class="material-icons">add</i>
+              </button>
+            </div>
+          </div>
         </div>
 
         <div

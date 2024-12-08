@@ -76,7 +76,8 @@ class GridGeometry {
         if (!this.gridOptions.columnDefs) {
             let columnDefs = [];
             this.mid.Fcols.forEach(el => {
-                if (el.Visible) {
+                //if (el.Visible) 
+                {
                     
                     let col = { 
                         field: el.FieldName, 

@@ -28,6 +28,5 @@ app.all('/air', async function(req, res, next){
 
 const port = 1793;
 app.listen(port, () => {
-    console.log(spath);
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port}`);
   });

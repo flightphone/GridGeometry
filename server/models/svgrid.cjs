@@ -15,8 +15,9 @@ async function createGrid(params) {
     const IdDeclareSet = rd["dispparamname"];
 
     let SQLParams = {};
+    let Setting = {};
     if (IdDeclareSet && !params.SQLParams) {
-        const Setting = await createGrid({ id: IdDeclareSet, mode: "new" });
+        Setting = await createGrid({ id: IdDeclareSet, mode: "new" });
         Setting.ReferEdit.SaveFieldList.forEach(f => {
             SQLParams["@" + f] = Setting.MainTab[0][f];
         });
@@ -27,10 +28,9 @@ async function createGrid(params) {
     let TextParams = {}
     if (params.TextParams)
         TextParams = params.TextParams;
-    for (let k in TextParams)
-    {
+    for (let k in TextParams) {
         SQLText = SQLText.replace(`[${k}]`, TextParams[k]);
-    }        
+    }
 
 
     let declarestr = "";
@@ -45,29 +45,81 @@ async function createGrid(params) {
     SQLText = declarestr + SQLText;
     const MainTab = await dba.dbquery(cnstr, SQLText, pars);
 
-
     if (params.mode == "data") {
         grid.MainTab = MainTab;
         return grid;
     }
     //end update MainTab
     //columns
-    const parser = new XMLParser({ ignoreAttributes: false });
 
     const Fcols = [];
     const ColumnTab = [];
-    let xmlCols = parser.parse(rd["paramvalue"]);
-    xmlCols.GRID.COLUMN.forEach((f) => {
-        Fcols.push({
-            FieldName: f["@_FieldName"],
-            FieldCaption: f["@_FieldCaption"],
-            DisplayFormat: f["@_DisplayFormat"],
-            Visible: (f["@_Visible"] == "1")
-        })
-        ColumnTab.push(f["@_FieldName"]);
-    });
+    try {
+        const parser = new XMLParser({ ignoreAttributes: false });
+        let xmlCols = parser.parse(rd["paramvalue"]);
+        xmlCols.GRID.COLUMN.forEach((f) => {
+            if ((f["@_Visible"] == "1"))
+                Fcols.push({
+                    FieldName: f["@_FieldName"],
+                    FieldCaption: f["@_FieldCaption"],
+                    DisplayFormat: f["@_DisplayFormat"],
+                    //Visible: (f["@_Visible"] == "1")
+                })
+            ColumnTab.push(f["@_FieldName"]);
+        });
+    }
+    catch (err) {
+        ;
+    }
 
+    const ReferEdit = { SaveFieldList: rd.savefieldlist?.split(","), Editors: [] };
+    const DecName = rd["decname"];
+    if (rd["editproc"]) {
+        //Editors
+        const sql = `select classname, decname, dstfield, groupdec, iddeclare, idmap, keyfield, srcfield from t_sysFieldMap where decname = '${DecName}'`;
+        const sysFieldMap = await dba.dbquery(cnstr, sql);
+        //console.log(sysFieldMap);
+        Fcols.forEach((f) => {
+            const EditField = {};
+            EditField.FieldName = f.FieldName;
+            EditField.FieldCaption = f.FieldCaption;
+            EditField.DisplayFormat = f.DisplayFormat;
+            if (ReferEdit.SaveFieldList.indexOf(f.FieldName) == -1)
+                EditField.disabled = true;
+            //join row
+            const a = sysFieldMap.filter((m) => {
+                return (m.dstfield == f.FieldName && m.classname);
+            });
+            if (a.length > 0) {
+                jr = {};
+                let GroupDec = "--";
+                const ClassName = a[0]["classname"];
+                if (ClassName == "Bureau.Finder" || ClassName == "Bureau.GridCombo") {
+                    jr.classname = ClassName;
+                    jr.IdDeclare = a[0]["iddeclare"];
+                    GroupDec = a[0]["groupdec"];
+                    const b = sysFieldMap.filter((m) => { return (m.groupdec == GroupDec) });
+                    jr.fields = {};
+                    b.forEach((rw) => {
+                        jr.fields[rw["srcfield"]] = rw["dstfield"];
+                    });
+                }
+                if (ClassName == "Bureau.GridCombo") {
+
+                    const c = sysFieldMap.filter((m) => { return (m.groupdec == GroupDec && m.keyfield == 1) });
+                    if (c.length > 0) {
+                        jr.keyField = c[0]["srcfield"];
+                        jr.valField = c[0]["dstfield"];
+                    }
+
+                }
+                EditField.joinRow = jr;
+            }
+            ReferEdit.Editors.push(EditField);
+        });
+    }
     grid.Descr = rd["descr"];
+    grid.DecName = DecName;
     grid.KeyF = rd["keyfield"];
     grid.DispField = rd["dispfield"];
     grid.KeyValue = rd["keyvalue"];
@@ -75,8 +127,11 @@ async function createGrid(params) {
     grid.TextParams = TextParams;
     grid.Fcols = Fcols;
     grid.ColumnTab = ColumnTab;
-    //grid.IdDeclareSet = IdDeclareSet;
-    grid.ReferEdit = { SaveFieldList: rd.savefieldlist.split(",") };
+    grid.IdDeclareSet = IdDeclareSet;
+    grid.EditProc = rd["editproc"];
+    grid.DelProc = rd["delproc"];
+    grid.ReferEdit = ReferEdit;
+    grid.Setting = Setting;
     grid.MainTab = MainTab;
 
     return grid;
