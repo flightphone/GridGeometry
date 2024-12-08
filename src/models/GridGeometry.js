@@ -160,6 +160,7 @@ class GridGeometry {
                     SQLParams["AUDTUSER"] = this.mid.Account;
                 }
 
+                /*
                 const url = mainObj.baseUrl + "React/exec";
                 let bd = new FormData();
 
@@ -175,9 +176,23 @@ class GridGeometry {
                     cache: "no-cache",
                     //credentials: "include",
                 });
+                */
+                const url = `${mainObj.baseUrl}/exec`;
+                let query = {
+                    EditProc: this.mid.DelProc,
+                    SQLParams: SQLParams
+                }
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json;charset=utf-8",
+                    },
+                    body: JSON.stringify(query),
+                });
+                
 
                 const res = await response.json();
-                if (res.message != "OK" && res.message != "Invalid storage type: DBNull.") {
+                if (res.message != "OK") {
                     mainObj.alert(res.message, "Error:");
                     return;
                 }
@@ -203,10 +218,15 @@ class GridGeometry {
         //save db
         if (!mainObj.jsonData) {
             let SQLParams = {};
-            findData.ReferEdit.SaveFieldList.map((f) => {
+            findData.ReferEdit.SaveFieldList.forEach((f) => {
                 SQLParams[f] = WorkRow[f];
             });
+            findData.ReferEdit.Editors.forEach((f)=>{
+                if (f.DisplayFormat == "dd.MM.yyyy HH:mm" && SQLParams[f.FieldName])
+                    SQLParams[f.FieldName] = SQLParams[f.FieldName].substring(0, 16).replace("T", " ");
+            });
 
+            /*
             const url = mainObj.baseUrl + "React/exec";
             let bd = new FormData();
 
@@ -221,16 +241,31 @@ class GridGeometry {
                 cache: "no-cache",
                 //credentials: "include"
             });
+            */
+            const url = `${mainObj.baseUrl}/exec`;
+            let query = {
+                EditProc: findData.EditProc,
+                SQLParams: SQLParams
+            }
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json;charset=utf-8",
+                },
+                body: JSON.stringify(query),
+            });
 
             const res = await response.json();
             if (res.message != "OK") {
+                //console.log(res.message);
                 mainObj.alert(res.message, "Error:");
                 return false;
             }
+            //console.log(res.ColumnTab);
             if (res.ColumnTab.length == 1) {
                 WorkRow[findData.KeyF] = res.MainTab[0][res.ColumnTab[0]];
             } else {
-                res.ColumnTab.map((column) => {
+                res.ColumnTab.forEach((column) => {
                     WorkRow[column] = res.MainTab[0][column];
                 });
             }

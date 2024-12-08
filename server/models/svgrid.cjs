@@ -128,14 +128,57 @@ async function createGrid(params) {
     grid.Fcols = Fcols;
     grid.ColumnTab = ColumnTab;
     grid.IdDeclareSet = IdDeclareSet;
-    grid.EditProc = rd["editproc"];
-    grid.DelProc = rd["delproc"];
+    grid.EditProc = rd["editproc"]?.toLowerCase();;
+    grid.DelProc = rd["delproc"]?.toLowerCase();
     grid.ReferEdit = ReferEdit;
     grid.Setting = Setting;
     grid.MainTab = MainTab;
-
+    grid.DefaultValues = {
+        audtuser: config.Account,
+        last_change_user: config.Account
+    }
+    grid.Account = config.Account;
     return grid;
 
 }
 
+async function exec(params) {
+    const cnstr = config.connectionString;
+    const EditProc = params.EditProc;
+    const SQLParams = params.SQLParams;
+    const pars = [];
+    for (const fname in SQLParams) {
+        let val = SQLParams[fname];
+        if (typeof val === 'string')
+            val = val.replace("'", "''")
+        val = val ? `'${val}'` : "null";
+        val = `@${fname} = ${val}`;
+        pars.push(val);
+    }
+    const strval = pars.join(", ")
+    const sql = `set dateformat ymd; execute ${EditProc} ${strval}`;
+    try {
+        const MainTab = await dba.dbquery(cnstr, sql);
+        console.log(MainTab);
+        ColumnTab = [];
+        for (const f in MainTab[0])
+            ColumnTab.push(f);
+
+        return {
+            message: "OK",
+            MainTab: MainTab,
+            ColumnTab: ColumnTab
+        };
+
+    }
+    catch (err) {
+        console.log(sql);
+        console.log(err);
+        return {
+            message: err
+        }
+    }
+}
+
 exports.createGrid = createGrid;
+exports.exec = exec;

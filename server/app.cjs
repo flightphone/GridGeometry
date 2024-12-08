@@ -17,8 +17,15 @@ app.use(express.json());
 app.all('/grid', async function(req, res, next){
   let params = (req.method == "GET") ? req.query : req.body;
   const grid = await svgrid.createGrid(params)
-  .catch((err)=> {return {error:err}})
+  .catch((err)=> {return {Error:err.toString()}})
   res.json(grid);
+});
+
+app.post('/exec', async function(req, res, next){
+  let params = req.body;
+  const result = await svgrid.exec(params)
+  //.catch((err)=> {return {message:err}})
+  res.json(result);
 });
 
 app.all('/air', async function(req, res, next){
