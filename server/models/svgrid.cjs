@@ -6,7 +6,7 @@ async function createGrid(params) {
     const grid = {}
     const id = params.id;
     let sql = "select iddeclare, decname, descr, dectype, decsql, keyfield, dispfield, keyvalue, dispvalue, keyparamname, dispparamname, isbasename, descript, addkeys, tablename, editproc, delproc, image_bmp, savefieldlist, p.paramvalue from t_rpdeclare d left join t_sysparams p on 'GridFind' + d.decname = p.paramname where iddeclare = @id";
-    //const cnstr = config.connectionString;
+    
     const sqlConfig = config.sqlConfig;
     const pool = new mssql.ConnectionPool(sqlConfig);
     await pool.connect();

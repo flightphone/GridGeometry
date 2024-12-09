@@ -107,7 +107,11 @@
       {
         const resp = await fetch(extparams.editorJson);
         const edJson = await resp.json();
+        agrid.mid.ReferEdit.Editors = edJson.Editors;
+        console.log(edJson);
         editor = new Editor(edJson, editDialog.content, {});
+        
+        //agrid.mid.ReferEdit.Editors = edJson.Editors;
       }
       else
         editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});

@@ -1,3 +1,5 @@
+import { ModalDialog } from "./models/ModalDialog";
+
 const prodaction = false;
 const back_url = 'http://localhost:1793';
 
@@ -7,6 +9,9 @@ let openIDs = []
 let sheme = localStorage.sheme ? localStorage.sheme : "ag-theme-balham-dark";
 if (sheme == "ag-theme-balham")
     document.querySelector("BODY").classList.toggle("dark");
+
+
+
 
 let mainObj = {
     jsonData: true,
@@ -43,8 +48,10 @@ let mainObj = {
         mainObj.activate();
     },
 
-    alert: (text, title = "message") => { alert(text); },
-    confirm: (text, title = "question") => { return confirm(text); },
+    alert: (text, title = "message") => {
+        alert(text);
+    },
+    confirm: (text, title = "question", callback = () => { }) => { return confirm(text); },
     alarm: (method, param) => {
         openMap.forEach((value) => {
             let m = value[method];
@@ -105,21 +112,6 @@ let mainObj = {
                 mid = await response.json();
             }
             else {
-                /*
-                const url = `${mainObj.baseUrl}/FinderStart`;
-                const bd = new FormData();
-                bd.append("id", idDeclare);
-                bd.append("mode", mode);
-                if (SQLParams) bd.append("SQLParams", JSON.stringify(SQLParams));
-                if (TextParams) bd.append("TextParams", JSON.stringify(TextParams));
-
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: bd,
-                    cache: "no-cache",
-                    //credentials: "include",
-                });
-                */
                 const url = `${mainObj.baseUrl}/grid`;
                 let query = {
                     id: idDeclare,

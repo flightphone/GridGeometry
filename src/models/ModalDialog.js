@@ -6,7 +6,7 @@ class ModalDialog {
     showModal = () => {
         this.dialog.showModal()
     }
-    constructor(height = "400", width = "600", okfun = () => { this.close() }) {
+    constructor(height = "400", width = "600", okfun = () => { this.close() }, al = false) {
         this.height = height;
         this.width = width;
         this.dialog = creatediv("", document.querySelector("main"), "dialog");
@@ -19,11 +19,17 @@ class ModalDialog {
         let dialogButton1 = creatediv("dialogButton", dialogPanel);
         let okbut = creatediv("mdl-button mdl-js-button mdl-button--raised", dialogButton1, "button");
         okbut.textContent = "OK";
-        let dialogButton2 = creatediv("dialogButton", dialogPanel);
-        let cancelbut = creatediv("mdl-button mdl-js-button mdl-button--raised", dialogButton2, "button");
-        cancelbut.textContent = "Cancel";
         okbut.onclick = () => okfun();
-        cancelbut.onclick = () => this.close();
+
+        if (!al) {
+            let dialogButton2 = creatediv("dialogButton", dialogPanel);
+            let cancelbut = creatediv("mdl-button mdl-js-button mdl-button--raised", dialogButton2, "button");
+            cancelbut.textContent = "Cancel";
+            cancelbut.onclick = () => this.close();
+        }
+
+
+
 
 
     }

@@ -8,7 +8,7 @@ class GridGeometry {
         this.extparams = extparams;
 
         this.localParam = `FindGrid${idDeclare}`;
-        
+
 
         this.gridOptions = {
             rowSelection: {
@@ -17,7 +17,7 @@ class GridGeometry {
                 enableClickSelection: true,
             },
 
-            
+
 
             onRowSelected: (ev) => {
                 if (this.extparams.onSelect)
@@ -48,7 +48,7 @@ class GridGeometry {
                 }
             },
 
-            
+
             defaultColDef: {
                 sortable: true,
                 filter: true,
@@ -78,11 +78,11 @@ class GridGeometry {
             this.mid.Fcols.forEach(el => {
                 //if (el.Visible) 
                 {
-                    
-                    let col = { 
-                        field: el.FieldName, 
-                        headerName: el.FieldCaption, 
-                        valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat) 
+
+                    let col = {
+                        field: el.FieldName,
+                        headerName: el.FieldCaption,
+                        valueFormatter: (d) => mainObj.dateformat(d.value, el.DisplayFormat)
                     };
                     let key = `${this.localParam}_width_${el.FieldName}`;
                     let val = localStorage.getItem(key);
@@ -98,7 +98,7 @@ class GridGeometry {
         //save width
         let wcols = this.gridApi.getColumns();
         wcols.forEach((col) => {
-            col.addEventListener('widthChanged', (e)=> {
+            col.addEventListener('widthChanged', (e) => {
                 //console.log(e);
                 let key = `${this.localParam}_width_${e.column.colId}`;
                 let val = e.column.actualWidth;
@@ -150,8 +150,9 @@ class GridGeometry {
         }
 
         let text = `delete record "${rw[0][this.mid.DispField]}"?`;
-        let dires = mainObj.confirm(text);
-        if (dires) {
+        let dires = mainObj.confirm(text, "Delete Record", async ()=>
+        //if (dires) 
+        {
             if (!mainObj.jsonData) {
 
                 let SQLParams = {};
@@ -160,23 +161,6 @@ class GridGeometry {
                     SQLParams["AUDTUSER"] = this.mid.Account;
                 }
 
-                /*
-                const url = mainObj.baseUrl + "React/exec";
-                let bd = new FormData();
-
-                bd.append("EditProc", this.mid.DelProc);
-                bd.append("SQLParams", JSON.stringify(SQLParams));
-                bd.append("KeyF", this.mid.KeyF);
-                bd.append("IdDeclare", this.idDeclare);
-                bd.append("mode", "delete");
-
-                const response = await fetch(url, {
-                    method: "POST",
-                    body: bd,
-                    cache: "no-cache",
-                    //credentials: "include",
-                });
-                */
                 const url = `${mainObj.baseUrl}/exec`;
                 let query = {
                     EditProc: this.mid.DelProc,
@@ -189,7 +173,7 @@ class GridGeometry {
                     },
                     body: JSON.stringify(query),
                 });
-                
+
 
                 const res = await response.json();
                 if (res.message != "OK") {
@@ -199,7 +183,7 @@ class GridGeometry {
 
             }
             this.gridApi.applyTransaction({ remove: rw });
-        }
+        });
 
     }
 
@@ -221,9 +205,11 @@ class GridGeometry {
             findData.ReferEdit.SaveFieldList.forEach((f) => {
                 SQLParams[f] = WorkRow[f];
             });
-            findData.ReferEdit.Editors.forEach((f)=>{
+            findData.ReferEdit.Editors.forEach((f) => {
                 if (f.DisplayFormat == "dd.MM.yyyy HH:mm" && SQLParams[f.FieldName])
                     SQLParams[f.FieldName] = SQLParams[f.FieldName].substring(0, 16).replace("T", " ");
+                if (f.DisplayFormat == "#,##0.00" && SQLParams[f.FieldName])
+                    SQLParams[f.FieldName] = SQLParams[f.FieldName].toString().replace(",", ".");
             });
 
             /*

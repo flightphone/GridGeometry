@@ -7,7 +7,7 @@ import { mainObj } from "../store";
 class Editor {
     constructor(ReferEdit, element, manager = {}) {
         this.WorkRow = {};
-        
+
         if (manager.row) {
             for (let column in manager.row) {
                 this.WorkRow[column] = manager.row[column] == null ? "" : manager.row[column];
@@ -93,14 +93,18 @@ class Editor {
             if (column.joinRow && column.joinRow.classname) {
                 classController = "controller option";
                 classname = column.joinRow.classname;
-
             }
+            /*
+            if (column.DisplayFormat == "#,##0.00")
+                classController = "controller number";
+            */
 
 
             let controller = creatediv(classController, childrens[childrens.length - 1]);
             let name = creatediv("name", controller);
             name.innerText = column.FieldCaption;
             let widget = creatediv("widget", controller);
+            //|| classController == "controller number"
             if (classController == "controller string") {
                 inp = creatediv("", widget, "INPUT");
                 if (column.disabled)
@@ -123,17 +127,16 @@ class Editor {
                 let classdisplay = "finder";
                 if (classname == "Bureau.GridCombo") {
                     //depend
-                    if (column.joinRow.params)
-                    {
+                    if (column.joinRow.params) {
                         for (let par in column.joinRow.params) {
                             const fname = column.joinRow.params[par];
                             let da = this.dependencies.get(fname);
                             if (da)
                                 da.push(column.joinRow.valField)
                             else
-                                da = [column.joinRow.valField];  
-                            this.dependencies.set(fname, da);      
-                        } 
+                                da = [column.joinRow.valField];
+                            this.dependencies.set(fname, da);
+                        }
                     }
                     if (!column.joinRow.FindConrol) {
 
@@ -233,10 +236,10 @@ class Editor {
 
 
     updateCombo = async (column) => {
-        
+
         if (!column.joinRow || !column.joinRow.params || column.control.tagName != "SELECT")
             return;
-        
+
         const TextParams = {};
         for (let par in column.joinRow.params) {
             const fname = column.joinRow.params[par];
@@ -262,7 +265,7 @@ class Editor {
             const col = this.FControls.get(f);
             await this.updateCombo(col);
             this.setVal(f);
-        })    
+        })
     }
 
     setVal = (FieldName) => {

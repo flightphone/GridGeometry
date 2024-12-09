@@ -6,14 +6,14 @@
   import Dogovors from "./lib/Dogovors.svelte";
   import FlightCard from "./lib/FlightCard.svelte";
   import FlightCardsList from "./lib/FlightCardsList.svelte";
-  import Air from "./lib/Air.svelte";
   import { mainObj, openMap, openIDs } from "./store";
-
+  import { ModalDialog } from "./models/ModalDialog";
 
   let smenu = true;
   let dialog;
   let treediv;
-  let mode = (mainObj.sheme == "ag-theme-balham-dark") ? "wb_sunny" : "brightness_2";
+  let mode =
+    mainObj.sheme == "ag-theme-balham-dark" ? "wb_sunny" : "brightness_2";
   let title = "Main Menu";
 
   let currentActive = "-1";
@@ -34,12 +34,11 @@
       mainObj.sheme == "ag-theme-balham-dark"
         ? "ag-theme-balham"
         : "ag-theme-balham-dark";
-    localStorage.sheme = mainObj.sheme;    
+    localStorage.sheme = mainObj.sheme;
     mainObj.alarm("toggle_shema");
   }
 
   mainObj.getForm = (id, link1, params) => {
-    if (id == "32") return Air;
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
@@ -60,11 +59,43 @@
   }
 
   onMount(async () => {
+    const alertdialog = new ModalDialog(
+      "300px",
+      "80%",
+      () => {
+        alertdialog.close();
+      },
+      true
+    );
+
+    mainObj.alert = (text, title = "message") => {
+      alertdialog.content.innerHTML = `<div><h8>${title}</h8></div><h6>${text}</h6>`;
+      alertdialog.showModal();
+      //alert(text);
+    };
+
+    const confirmdialog = new ModalDialog(
+      "300px",
+      "80%",
+      () => {
+        mainObj.confirmFun();
+        confirmdialog.close();
+      },
+    );
+
+    mainObj.confirm = (text, title = "question", callback = () => {}) => 
+    { 
+      mainObj.confirmFun = callback;
+      confirmdialog.content.innerHTML = `<div><h8>${title}</h8></div><h6>${text}</h6>`;
+      confirmdialog.showModal();
+      return false;
+    };
+
     let startid = window.location.hash.replace("#", "");
     if (startid && startid.substring(0, 2) == "FC") {
       smenu = false;
       let fc_pk = startid.substring(2);
-      mainObj.open(startid, "FlightCard", "", {FC_PK:fc_pk});
+      mainObj.open(startid, "FlightCard", "", { FC_PK: fc_pk });
       return;
     }
 
@@ -83,24 +114,23 @@
 
 <main>
   {#if smenu}
-  <div class="menubut">
-    <button
-      class="mdl-button mdl-js-button mdl-button--fab darkop"
-      on:click={openModal}
-    >
-      <i class="material-icons">menu</i>
-    </button>
-  </div>
-  
-  
-  <div class="menubut2">
-    <button
-      class="mdl-button mdl-js-button mdl-button--fab darkop"
-      on:click={togleMode}
-    >
-      <i class="material-icons">{mode}</i>
-    </button>
-  </div>
+    <div class="menubut">
+      <button
+        class="mdl-button mdl-js-button mdl-button--fab darkop"
+        on:click={openModal}
+      >
+        <i class="material-icons">menu</i>
+      </button>
+    </div>
+
+    <div class="menubut2">
+      <button
+        class="mdl-button mdl-js-button mdl-button--fab darkop"
+        on:click={togleMode}
+      >
+        <i class="material-icons">{mode}</i>
+      </button>
+    </div>
   {/if}
   <dialog bind:this={dialog} class="modal">
     <div
@@ -136,14 +166,12 @@
       </div>
     </div>
   </dialog>
-<!--
+  <!--
   <div style="width:95%; height:300px">
   <CargoPost QD_PK="F3053171-EBE8-47EC-9D4E-1CF6309862F5"></CargoPost>
    </div>
--->   
-   
-  
-  
+-->
+
   {#each opens as e}
     <div hidden={e != currentActive}>
       <svelte:component
