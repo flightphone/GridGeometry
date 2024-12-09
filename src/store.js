@@ -9,7 +9,7 @@ if (sheme == "ag-theme-balham")
     document.querySelector("BODY").classList.toggle("dark");
 
 let mainObj = {
-    jsonData: false,
+    jsonData: true,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {

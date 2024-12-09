@@ -72,7 +72,7 @@
     for (let f in setting.WorkRow)
       agrid.mid.Setting.MainTab[0][f] = setting.WorkRow[f];
     agrid.mid.Setting.ReferEdit.SaveFieldList.map((f) => {
-      agrid.mid.SQLParams["@" + f] = setting.WorkRow[f];
+      agrid.mid.SQLParams[f] = setting.WorkRow[f];
     });
     //console.log(agrid.mid.SQLParams);
     agrid.updateTab();

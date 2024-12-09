@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const db = require('./models/airlines.cjs');
 const config = require('./config.cjs');
 const svgrid = require('./models/svgrid.cjs');
 
@@ -24,14 +23,10 @@ app.all('/grid', async function(req, res, next){
 app.post('/exec', async function(req, res, next){
   let params = req.body;
   const result = await svgrid.exec(params)
-  //.catch((err)=> {return {message:err}})
+  .catch((err)=> {return {message:err.toString()}})
   res.json(result);
 });
 
-app.all('/air', async function(req, res, next){
-  let r = await db.air().catch((err)=>{return err});
-  res.json(r);
-});
 
 const port = 1793;
 app.listen(port, () => {

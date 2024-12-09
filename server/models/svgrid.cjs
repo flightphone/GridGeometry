@@ -1,13 +1,20 @@
 const config = require('../config.cjs');
-const dba = require('../dba.cjs');
 const { XMLParser } = require("fast-xml-parser");
+const mssql = require('mssql')
 
 async function createGrid(params) {
     const grid = {}
     const id = params.id;
-    let sql = "declare @id varchar(32) = ?; select iddeclare, decname, descr, dectype, decsql, keyfield, dispfield, keyvalue, dispvalue, keyparamname, dispparamname, isbasename, descript, addkeys, tablename, editproc, delproc, image_bmp, savefieldlist, p.paramvalue from t_rpdeclare d left join t_sysparams p on 'GridFind' + d.decname = p.paramname where iddeclare = @id";
-    const cnstr = config.connectionString;
-    const t_rp = await dba.dbquery(cnstr, sql, [id]);
+    let sql = "select iddeclare, decname, descr, dectype, decsql, keyfield, dispfield, keyvalue, dispvalue, keyparamname, dispparamname, isbasename, descript, addkeys, tablename, editproc, delproc, image_bmp, savefieldlist, p.paramvalue from t_rpdeclare d left join t_sysparams p on 'GridFind' + d.decname = p.paramname where iddeclare = @id";
+    //const cnstr = config.connectionString;
+    const sqlConfig = config.sqlConfig;
+    const pool = new mssql.ConnectionPool(sqlConfig);
+    await pool.connect();
+    const request = new mssql.Request(pool);
+    request.input("id", id);
+    const result = await request.query(sql);
+    const t_rp = result.recordset;
+
 
     const rd = t_rp[0];
     let SQLText = rd.decsql;
@@ -19,7 +26,7 @@ async function createGrid(params) {
     if (IdDeclareSet && !params.SQLParams) {
         Setting = await createGrid({ id: IdDeclareSet, mode: "new" });
         Setting.ReferEdit.SaveFieldList.forEach(f => {
-            SQLParams["@" + f] = Setting.MainTab[0][f];
+            SQLParams[f] = Setting.MainTab[0][f];
         });
     }
     if (params.SQLParams)
@@ -33,17 +40,13 @@ async function createGrid(params) {
     }
 
 
-    let declarestr = "";
-    const pars = [];
+
+    const request2 = new mssql.Request(pool);
     for (const p in SQLParams) {
-        let pname = p;
-        if (pname.substring(0, 1) != "@")
-            pname = "@" + pname;
-        declarestr = declarestr + `declare ${pname} varchar(64) = ?; `
-        pars.push(SQLParams[p]);
+        request2.input(p, SQLParams[p]);
     }
-    SQLText = declarestr + SQLText;
-    const MainTab = await dba.dbquery(cnstr, SQLText, pars);
+    const result2 = await request2.query(SQLText);
+    const MainTab = result2.recordset;
 
     if (params.mode == "data") {
         grid.MainTab = MainTab;
@@ -76,9 +79,12 @@ async function createGrid(params) {
     const DecName = rd["decname"];
     if (rd["editproc"]) {
         //Editors
-        const sql = `select classname, decname, dstfield, groupdec, iddeclare, idmap, keyfield, srcfield from t_sysFieldMap where decname = '${DecName}'`;
-        const sysFieldMap = await dba.dbquery(cnstr, sql);
-        //console.log(sysFieldMap);
+        const sql = "select classname, decname, dstfield, groupdec, iddeclare, idmap, keyfield, srcfield from t_sysFieldMap where decname = @DecName";
+        const request3 = new mssql.Request(pool);
+        request3.input("DecName", DecName);
+        const result3 = await request3.query(sql);
+        const sysFieldMap = result3.recordset;
+
         Fcols.forEach((f) => {
             const EditField = {};
             EditField.FieldName = f.FieldName;
@@ -143,41 +149,38 @@ async function createGrid(params) {
 }
 
 async function exec(params) {
-    const cnstr = config.connectionString;
+    //const cnstr = config.connectionString;
+    const sqlConfig = config.sqlConfig;
+    const pool = new mssql.ConnectionPool(sqlConfig);
+    await pool.connect();
+    const request = new mssql.Request(pool);
+
     const EditProc = params.EditProc;
     const SQLParams = params.SQLParams;
     const pars = [];
     for (const fname in SQLParams) {
+        pars.push(`@${fname} = @${fname}`);
         let val = SQLParams[fname];
-        if (typeof val === 'string')
-            val = val.replace("'", "''")
-        val = val ? `'${val}'` : "null";
-        val = `@${fname} = ${val}`;
-        pars.push(val);
+        if (val == '')
+            val = null;
+        request.input(fname, val);
     }
     const strval = pars.join(", ")
     const sql = `set dateformat ymd; execute ${EditProc} ${strval}`;
-    try {
-        const MainTab = await dba.dbquery(cnstr, sql);
-        console.log(MainTab);
-        ColumnTab = [];
-        for (const f in MainTab[0])
-            ColumnTab.push(f);
+    const result = await request.query(sql);
+    const MainTab = result.recordset;
+    ColumnTab = [];
+    if (MainTab)
+    for (const f in MainTab[0])
+        ColumnTab.push(f);
 
-        return {
-            message: "OK",
-            MainTab: MainTab,
-            ColumnTab: ColumnTab
-        };
+    return {
+        message: "OK",
+        MainTab: MainTab,
+        ColumnTab: ColumnTab
+    };
 
-    }
-    catch (err) {
-        console.log(sql);
-        console.log(err);
-        return {
-            message: err
-        }
-    }
+
 }
 
 exports.createGrid = createGrid;
