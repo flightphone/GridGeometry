@@ -116,7 +116,7 @@ class GridGeometry {
         this.gridApi.setGridOption("rowData", []);
         let data = await mainObj.fetch(this.idDeclare, "data", this.mid.SQLParams, this.mid.TextParams);
         if (data.Error) {
-            mainObj.alert(data.Error);
+            mainObj.alert(data.Error, "Error");
             return;
         }
         this.mid.MainTab = data.MainTab;
@@ -177,7 +177,7 @@ class GridGeometry {
 
                 const res = await response.json();
                 if (res.message != "OK") {
-                    mainObj.alert(res.message, "Error:");
+                    mainObj.alert(res.message, "Error");
                     return;
                 }
 
@@ -244,7 +244,7 @@ class GridGeometry {
             const res = await response.json();
             if (res.message != "OK") {
                 //console.log(res.message);
-                mainObj.alert(res.message, "Error:");
+                mainObj.alert(res.message, "Error");
                 return false;
             }
             //console.log(res.ColumnTab);

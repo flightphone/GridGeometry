@@ -60,7 +60,7 @@
 
   onMount(async () => {
     const alertdialog = new ModalDialog(
-      "300px",
+      "160px",
       "80%",
       () => {
         alertdialog.close();
@@ -69,13 +69,17 @@
     );
 
     mainObj.alert = (text, title = "message") => {
-      alertdialog.content.innerHTML = `<div><h8>${title}</h8></div><h6>${text}</h6>`;
+      alertdialog.content.innerHTML = `<div class="title-dialog"><h8>${title}</h8></div>
+      <div class="content-dialog">
+      <h5>${text}</h5>
+      </div>
+      `;
       alertdialog.showModal();
       //alert(text);
     };
 
     const confirmdialog = new ModalDialog(
-      "300px",
+      "160px",
       "80%",
       () => {
         mainObj.confirmFun();
@@ -86,7 +90,10 @@
     mainObj.confirm = (text, title = "question", callback = () => {}) => 
     { 
       mainObj.confirmFun = callback;
-      confirmdialog.content.innerHTML = `<div><h8>${title}</h8></div><h6>${text}</h6>`;
+      confirmdialog.content.innerHTML = `<div class="title-dialog"><h8>${title}</h8><div>
+      <div class="content-dialog" style="">
+      <h5>${text}</h5>
+      </div>`;
       confirmdialog.showModal();
       return false;
     };

@@ -184,16 +184,19 @@
 
     await agrid.start();
     if (agrid.mid.Error) {
-      mainObj.alert(agrid.mid.Error);
+      mainObj.alert(agrid.mid.Error, "Error");
       return;
     }
-    agrid.init();
+    
+    //console.log(agrid.mid.MainTab);
     agrid.mid.MainTab.forEach((data) => {
+      data["QD_isPosted"] = (data["QD_isPosted"] == 1);
       if (data["ClassName"] == "RegulationPrint.UTGCargoPost") {
         QD_PK = data["QD_PK"];
         s756 = true;
       }
     });
+    agrid.init();
 
     tgrid = new GridGeometry("1639", tdiv, {
       TextParams: {
@@ -205,7 +208,7 @@
     });
     await tgrid.start();
     if (tgrid.mid.Error) {
-      mainObj.alert(tgrid.mid.Error);
+      mainObj.alert(tgrid.mid.Error, "Error");
       return;
     }
     tgrid.init();
@@ -228,30 +231,11 @@
 </div>
 
 <div class="mainapp">
-  <!--
-  <div class="appbar1">
-    <div class="but" title="save record">
-      <button
-        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
-      >
-        <i class="material-icons">save</i>
-      </button>
-    </div>
-
-    <div class="but" title="add record">
-      <button
-        class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
-      >
-        <i class="material-icons">add</i>
-      </button>
-    </div>
-  </div>
-  -->
   <div
     style="height:calc(100% - 6px); margin: 3px;border: 1px solid gray; display: flex;
   flex-direction: row;"
   >
-    <!--height:calc(100% - 6px)-->
+    
     <div
       bind:this={fcdiv}
       style="width:300px; margin: 0px 0px 0px 3px;height:calc(100%)"
@@ -280,7 +264,7 @@
                 <i class="material-icons">save</i>
               </button>
             </div>
-
+            <!--
             <div class="but" title="add record">
               <button
                 class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
@@ -288,6 +272,7 @@
                 <i class="material-icons">add</i>
               </button>
             </div>
+            -->
           </div>
         </div>
 

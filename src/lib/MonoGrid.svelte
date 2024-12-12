@@ -90,7 +90,7 @@
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
     await agrid.start();
     if (agrid.mid.Error) {
-      mainObj.alert(agrid.mid.Error);
+      mainObj.alert(agrid.mid.Error, "Error");
       return;
     }
     agrid.init();
