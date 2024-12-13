@@ -43,7 +43,8 @@ let mainObj = {
         } else if (openMap.get(id).activate) openMap.get(id).activate();
         mainObj.current = id;
         //25.05.2022 history
-        window.location.hash = id;
+        if (link1!="exit") //13.12.2024
+            window.location.hash = id;
         //11.11.2024
         mainObj.activate();
     },
@@ -120,11 +121,12 @@ let mainObj = {
 
                 if (SQLParams) query.SQLParams = SQLParams;
                 if (TextParams) query.TextParams = TextParams;
-
+                
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
+                        'Authorization': mainObj.token
                     },
                     body: JSON.stringify(query),
                 });

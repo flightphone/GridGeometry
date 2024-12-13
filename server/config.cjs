@@ -13,7 +13,7 @@ fs.readFile(fname, 'utf8', (err, data) => {
         {
             config[pro] = conf[pro];
         }
-        console.dir(config);
+        //console.dir(config);
     }
     catch (e) {
         console.error(e);

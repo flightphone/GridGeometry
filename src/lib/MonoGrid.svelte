@@ -27,7 +27,7 @@
     adiv.classList.toggle("ag-theme-balham");
   };
 
- //const gridEvent = {}
+  //const gridEvent = {}
 
   let openEdit = () => {
     action = "edit";
@@ -90,7 +90,9 @@
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
     await agrid.start();
     if (agrid.mid.Error) {
-      mainObj.alert(agrid.mid.Error, "Error");
+      if (agrid.mid.Error == "access denied") {
+        mainObj.open("-1", "exit", {});
+      } else mainObj.alert(agrid.mid.Error, "Error");
       return;
     }
     agrid.init();
@@ -103,20 +105,16 @@
     IdDeclareSet = agrid.mid.IdDeclareSet;
     if (EditProc) {
       editDialog = new ModalDialog("600px", "900px", save);
-      if (extparams.editorJson)
-      {
+      if (extparams.editorJson) {
         const resp = await fetch(extparams.editorJson);
         const edJson = await resp.json();
         agrid.mid.ReferEdit.Editors = edJson.Editors;
-        console.log(edJson);
+        //console.log(edJson);
         editor = new Editor(edJson, editDialog.content, {});
-        
+
         //agrid.mid.ReferEdit.Editors = edJson.Editors;
-      }
-      else
-        editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
-      
-      
+      } else editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+
       extparams.onEnter = openEdit;
     }
 

@@ -8,6 +8,7 @@
   import FlightCardsList from "./lib/FlightCardsList.svelte";
   import { mainObj, openMap, openIDs } from "./store";
   import { ModalDialog } from "./models/ModalDialog";
+  import Login from "./lib/Login.svelte";
 
   let smenu = true;
   let dialog;
@@ -18,6 +19,7 @@
 
   let currentActive = "-1";
   let opens = [];
+  let tok = "";
 
   function openModal() {
     dialog.showModal();
@@ -42,6 +44,7 @@
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
+    if (link1 == "exit") return Login;
     if (params) return MonoGrid;
     else return "not implemented";
   };
@@ -55,10 +58,15 @@
     let id = e.getAttribute("idmenu");
     let link1 = e.getAttribute("link1");
     let params = e.getAttribute("params");
-    mainObj.open(id, link1, params, {});
+    if (link1 == "exit")
+    {
+      mainObj.token = "";
+      localStorage.setItem("access_token", "");
+    }
+      mainObj.open(id, link1, params, {});
   }
 
-  onMount(async () => {
+  const startapp = async () => {
     const alertdialog = new ModalDialog(
       "160px",
       "80%",
@@ -116,11 +124,20 @@
 
     let startobj = treeMap.get(startid);
     if (startobj) mainObj.open(startid, startobj.link1, startobj.params);
+  }
+  onMount(async () => {
+    mainObj.token = localStorage.getItem("access_token");
+    tok = mainObj.token;
+    if (!mainObj.token)
+      mainObj.open("-1", "exit", {});
+    else  
+      startapp(); 
+    
   });
 </script>
 
 <main>
-  {#if smenu}
+  {#if smenu && tok}
     <div class="menubut">
       <button
         class="mdl-button mdl-js-button mdl-button--fab darkop"
@@ -129,6 +146,7 @@
         <i class="material-icons">menu</i>
       </button>
     </div>
+
 
     <div class="menubut2">
       <button
@@ -139,6 +157,8 @@
       </button>
     </div>
   {/if}
+ 
+  
   <dialog bind:this={dialog} class="modal">
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"
