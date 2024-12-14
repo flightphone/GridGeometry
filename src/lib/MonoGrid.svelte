@@ -62,9 +62,9 @@
       let res = await agrid.save(editor.WorkRow, action);
       if (res) editDialog.close();
     } catch (err) {
-      mainObj.alert(err.toString());
+      mainObj.alert(err.toString(), "Error:");
     }
-    //console.log(editor.WorkRow);
+    
   };
 
   let saveSetting = () => {
@@ -108,12 +108,15 @@
       if (extparams.editorJson) {
         const resp = await fetch(extparams.editorJson);
         const edJson = await resp.json();
-        agrid.mid.ReferEdit.Editors = edJson.Editors;
+        agrid.mid.ReferEdit = edJson;
         //console.log(edJson);
         editor = new Editor(edJson, editDialog.content, {});
 
         //agrid.mid.ReferEdit.Editors = edJson.Editors;
-      } else editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+      } else 
+      {
+        editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
+      }
 
       extparams.onEnter = openEdit;
     }

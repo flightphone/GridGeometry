@@ -1,12 +1,14 @@
 const config = require('../config.cjs');
 const { XMLParser } = require("fast-xml-parser");
 const mssql = require('mssql')
+const bcrypt = require('bcryptjs');
+const { authenticate } = require('ldap-authentication')
 
 async function createGrid(params) {
     const grid = {}
     const id = params.id;
     let sql = "select iddeclare, decname, descr, dectype, decsql, keyfield, dispfield, keyvalue, dispvalue, keyparamname, dispparamname, isbasename, descript, addkeys, tablename, editproc, delproc, image_bmp, savefieldlist, p.paramvalue from t_rpdeclare d left join t_sysparams p on 'GridFind' + d.decname = p.paramname where iddeclare = @id";
-    
+
     const sqlConfig = config.sqlConfig;
     const pool = new mssql.ConnectionPool(sqlConfig);
     await pool.connect();
@@ -18,7 +20,7 @@ async function createGrid(params) {
 
     const rd = t_rp[0];
     let SQLText = rd.decsql;
-    SQLText = SQLText.replace('[Account]', config.Account);
+    SQLText = SQLText.replace('[Account]', params.Account);
     const IdDeclareSet = rd["dispparamname"];
 
     let SQLParams = {};
@@ -139,16 +141,19 @@ async function createGrid(params) {
     grid.ReferEdit = ReferEdit;
     grid.Setting = Setting;
     grid.MainTab = MainTab;
-    grid.DefaultValues = {
-        audtuser: config.Account,
-        last_change_user: config.Account
-    }
-    grid.Account = config.Account;
+    grid.DefaultValues = {};
+    /*
+    const audtu = ["audtuser", "last_change_user", "TF_Audtuser"]
+    audtu.forEach((f) => {
+        grid.DefaultValues[f] = params.Account;
+    });
+    grid.Account = params.Account;
+    */
     return grid;
 
 }
 
-async function exec(params) {
+async function exec(params, Account) {
     //const cnstr = config.connectionString;
     const sqlConfig = config.sqlConfig;
     const pool = new mssql.ConnectionPool(sqlConfig);
@@ -158,11 +163,14 @@ async function exec(params) {
     const EditProc = params.EditProc;
     const SQLParams = params.SQLParams;
     const pars = [];
+    const audtu = ["audtuser", "last_change_user", "tf_audtuser", "account"]
     for (const fname in SQLParams) {
         pars.push(`@${fname} = @${fname}`);
         let val = SQLParams[fname];
         if (val == '')
             val = null;
+        if (audtu.indexOf(fname.toLowerCase()) > -1)
+            val = Account;
         request.input(fname, val);
     }
     const strval = pars.join(", ")
@@ -171,8 +179,8 @@ async function exec(params) {
     const MainTab = result.recordset;
     ColumnTab = [];
     if (MainTab)
-    for (const f in MainTab[0])
-        ColumnTab.push(f);
+        for (const f in MainTab[0])
+            ColumnTab.push(f);
 
     return {
         message: "OK",
@@ -183,5 +191,33 @@ async function exec(params) {
 
 }
 
+// Mock User Data
+const users = [
+    { id: 1, username: 'Admin', password: bcrypt.hashSync('Debug', 8) },
+    { id: 2, username: 'HP', password: bcrypt.hashSync('Debug', 8) }
+];
+
+async function auth(params) {
+    const { username, password } = params;
+    const user = users.find(u => u.username === username);
+    if (user && bcrypt.compareSync(password, user.password))
+        return user;
+    //ldap
+    //riemann, password
+    const authenticated = await authenticate({
+        ldapOpts: { url: 'ldap://ldap.forumsys.com' },
+        userDn: `uid=${username},dc=example,dc=com`,
+        userPassword: password,
+    }).catch((err) => {
+        return null;
+    }
+    );
+    if (authenticated)
+        return { id: 100, username: username }
+    else
+        return null;
+
+}
 exports.createGrid = createGrid;
 exports.exec = exec;
+exports.auth = auth;

@@ -1,5 +1,3 @@
-import { ModalDialog } from "./models/ModalDialog";
-
 const prodaction = false;
 const back_url = 'http://localhost:1793';
 

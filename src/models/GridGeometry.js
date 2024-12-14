@@ -158,7 +158,7 @@ class GridGeometry {
                 let SQLParams = {};
                 SQLParams[this.mid.KeyF] = rw[0][this.mid.KeyF];
                 if (this.mid.DelProc.toLowerCase().indexOf("_del_1") > -1) {
-                    SQLParams["AUDTUSER"] = this.mid.Account;
+                    SQLParams["AUDTUSER"] = null;
                 }
 
                 const url = `${mainObj.baseUrl}/exec`;
@@ -170,15 +170,16 @@ class GridGeometry {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json;charset=utf-8",
+                        'Authorization': mainObj.token
                     },
                     body: JSON.stringify(query),
                 });
 
 
                 const res = await response.json();
-                if (res.message != "OK") {
-                    mainObj.alert(res.message, "Error");
-                    return;
+                if (res.Error) {
+                    mainObj.alert(res.Error, "Error");
+                    return false;
                 }
 
             }
@@ -212,22 +213,7 @@ class GridGeometry {
                     SQLParams[f.FieldName] = SQLParams[f.FieldName].toString().replace(",", ".");
             });
 
-            /*
-            const url = mainObj.baseUrl + "React/exec";
-            let bd = new FormData();
-
-            bd.append("EditProc", findData.EditProc);
-            bd.append("SQLParams", JSON.stringify(SQLParams));
-            bd.append("KeyF", findData.KeyF);
-            bd.append("IdDeclare", findData.IdDeclare);
-            bd.append("mode", "data");
-            const response = await fetch(url, {
-                method: "POST",
-                body: bd,
-                cache: "no-cache",
-                //credentials: "include"
-            });
-            */
+            
             const url = `${mainObj.baseUrl}/exec`;
             let query = {
                 EditProc: findData.EditProc,
@@ -237,15 +223,14 @@ class GridGeometry {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json;charset=utf-8",
+                    'Authorization': mainObj.token
                 },
                 body: JSON.stringify(query),
             });
 
             const res = await response.json();
-            if (res.message != "OK") {
-                //console.log(res.message);
-                mainObj.alert(res.message, "Error");
-                return false;
+            if (res.Error) {
+                throw res.Error;
             }
             //console.log(res.ColumnTab);
             if (res.ColumnTab.length == 1) {
