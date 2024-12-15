@@ -234,7 +234,7 @@ async function gettree(Account) {
         ImageUrl[`tree${r.idimage}`] = r.image_bmp;
     })
 
-    var rootItem = { text: 'root' };
+    var rootItem = { text: 'root', children: [] };
     CreateItems('Root/', rootItem, rows, ImageByCaption);
     rootItem.children.push({
         id: "-1",

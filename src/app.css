@@ -79,6 +79,10 @@
   color: var(--light-color);
 }
 
+.dark .fancytree-node:hover .fancytree-title {
+  color: var(--light-color);
+}
+
 .dark button {
   background-color: var(--dark-button);
   color: var(--dark-color);

@@ -1,8 +1,12 @@
 let active;
 let treeMap = new Map();
 
+const click_cls = ["fancytree-title", "fancytree-expander", "fancytree-icon"];
 
 function clickTree(e, callback = (l) => { }) {
+    let cls = e.target.className;
+    if (click_cls.indexOf(cls) == -1)
+        return;
     let sp = e.target.parentElement;
     let li = sp.parentElement;
     if (sp.classList.contains("fancytree-has-children")) {
