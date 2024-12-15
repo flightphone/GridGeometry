@@ -1,5 +1,6 @@
 <script>
   import "./css/skin-win8/ui.fancytree.css";
+  import "./css/tree.css";
   import { CreateTreeTree, treeMap } from "./models/TreeCore";
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
@@ -58,12 +59,11 @@
     let id = e.getAttribute("idmenu");
     let link1 = e.getAttribute("link1");
     let params = e.getAttribute("params");
-    if (link1 == "exit")
-    {
+    if (link1 == "exit") {
       mainObj.token = "";
       localStorage.setItem("access_token", "");
     }
-      mainObj.open(id, link1, params, {});
+    mainObj.open(id, link1, params, {});
   }
 
   const startapp = async () => {
@@ -86,17 +86,12 @@
       //alert(text);
     };
 
-    const confirmdialog = new ModalDialog(
-      "160px",
-      "80%",
-      () => {
-        mainObj.confirmFun();
-        confirmdialog.close();
-      },
-    );
+    const confirmdialog = new ModalDialog("160px", "80%", () => {
+      mainObj.confirmFun();
+      confirmdialog.close();
+    });
 
-    mainObj.confirm = (text, title = "question", callback = () => {}) => 
-    { 
+    mainObj.confirm = (text, title = "question", callback = () => {}) => {
       mainObj.confirmFun = callback;
       confirmdialog.content.innerHTML = `<div class="title-dialog"><h8>${title}</h8><div>
       <div class="content-dialog" style="">
@@ -115,24 +110,43 @@
     }
 
     //let url = mainObj.baseUrl + "ustore/gettree";
-    let url = "./tmp/tree.json";
-    if (mainObj.jsonData) url = "./json_grids/gettree.json";
-
-    const res = await fetch(url);
-    const data = await res.json();
+    //let url = "./tmp/tree.json";
+    let data;
+    if (mainObj.jsonData) {
+      let url = "./json_grids/gettree.json";
+      const res = await fetch(url);
+      data = await res.json();
+    } else {
+      try {
+        let url = mainObj.baseUrl + "/gettree";
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            Authorization: mainObj.token,
+          },
+        });
+        data = await res.json();
+        //console.log(data);
+        if (data.Error) {
+          if (data.Error == "access denied") mainObj.open("-1", "exit", {});
+          else mainObj.alert(data.Error, "Error:");
+          return;
+        }
+      } catch (err) {
+        mainObj.alert(err.toString(), "Error:");
+      }
+    }
     CreateTreeTree(treediv, data, openItem);
 
     let startobj = treeMap.get(startid);
     if (startobj) mainObj.open(startid, startobj.link1, startobj.params);
-  }
+  };
   onMount(async () => {
     mainObj.token = localStorage.getItem("access_token");
     tok = mainObj.token;
-    if (!mainObj.token)
-      mainObj.open("-1", "exit", {});
-    else  
-      startapp(); 
-    
+    if (!mainObj.token) mainObj.open("-1", "exit", {});
+    else startapp();
   });
 </script>
 
@@ -147,7 +161,6 @@
       </button>
     </div>
 
-
     <div class="menubut2">
       <button
         class="mdl-button mdl-js-button mdl-button--fab darkop"
@@ -157,8 +170,7 @@
       </button>
     </div>
   {/if}
- 
-  
+
   <dialog bind:this={dialog} class="modal">
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"

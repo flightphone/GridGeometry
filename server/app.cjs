@@ -24,7 +24,7 @@ app.use(express.json());
 app.post('/login', async (req, res) => {
   const user = await svgrid.auth(req.body);
   if (user) {
-    const token = jwt.sign({ id: user.id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '90d' });
+    const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY, { expiresIn: '90d' });
     res.json({ token });
   } else {
     res.status(401).json({ message: 'Invalid credentials' });
@@ -53,6 +53,13 @@ app.all('/grid', authenticateJWT, async (req, res, next) => {
   res.json(grid);
 });
 
+
+app.post('/gettree', authenticateJWT, async (req, res) => {
+  const menu = await svgrid.gettree(req.user.username)
+    .catch((err) => {return { Error: err.toString() }})
+  res.json(menu);
+});
+
 app.post('/exec', authenticateJWT, async function (req, res, next) {
   let params = req.body;
   const result = await svgrid.exec(params, req.user.username)
@@ -63,5 +70,5 @@ app.post('/exec', authenticateJWT, async function (req, res, next) {
 
 const port = 1793;
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}/#81`);
 });

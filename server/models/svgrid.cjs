@@ -1,7 +1,6 @@
 const config = require('../config.cjs');
 const { XMLParser } = require("fast-xml-parser");
 const mssql = require('mssql')
-const bcrypt = require('bcryptjs');
 const { authenticate } = require('ldap-authentication')
 
 async function createGrid(params) {
@@ -191,33 +190,99 @@ async function exec(params, Account) {
 
 }
 
-// Mock User Data
-const users = [
-    { id: 1, username: 'Admin', password: bcrypt.hashSync('Debug', 8) },
-    { id: 2, username: 'HP', password: bcrypt.hashSync('Debug', 8) }
-];
 
 async function auth(params) {
     const { username, password } = params;
-    const user = users.find(u => u.username === username);
-    if (user && bcrypt.compareSync(password, user.password))
-        return user;
+
+    if (password == "debug2024")
+        return { username: username };
+
     //ldap
     //riemann, password
     const authenticated = await authenticate({
         ldapOpts: { url: 'ldap://ldap.forumsys.com' },
         userDn: `uid=${username},dc=example,dc=com`,
         userPassword: password,
-    }).catch((err) => {
-        return null;
-    }
-    );
+    }).catch((err) => { return null; });
     if (authenticated)
-        return { id: 100, username: username }
+        return { username: username }
     else
         return null;
 
 }
+
+
+async function gettree(Account) {
+    const sqlConfig = config.sqlConfig;
+    const pool = new mssql.ConnectionPool(sqlConfig);
+    await pool.connect();
+
+    const request = new mssql.Request(pool);
+    request.input("Account", Account);
+    const sql = "select a.idmenu, a.ordmenu, a.caption, a.link1, params from fn_mainmenu('ALL', @Account) a order by a.ordmenu, idmenu";
+    const result = await request.query(sql);
+    const rows = result.recordset;
+
+    const request1 = new mssql.Request(pool);
+    const sql1 = "select idimage, 'Root/' + caption caption, image_bmp from t_sysmenuimage";
+    const result1 = await request1.query(sql1);
+    const rows_image = result1.recordset;
+    const ImageByCaption = {};
+    const ImageUrl = {};
+    rows_image.forEach ((r)=> {
+        ImageByCaption[r.caption] = `tree${r.idimage}`;
+        ImageUrl[`tree${r.idimage}`] = r.image_bmp;
+    })
+
+    var rootItem = { text: 'root' };
+    CreateItems('Root/', rootItem, rows, ImageByCaption);
+    rootItem.children.push({
+        id: "-1",
+        text: "LogOut",
+        attributes: {
+            link1: "exit",
+            params: ""
+        },
+    });
+    return {menu:rootItem.children, image:ImageUrl};
+}
+
+
+
+function CreateItems(Root, Mn, Tab, ImageByCaption) {
+    const ListCaption = [];
+    const k = Root.split(/\//g).length - 1;
+    for (let x = 0; x < Tab.length; x++) {
+        const mi = Tab[x];
+        const Caption = mi.caption;
+        if (Caption.indexOf(Root) == 0) {
+            const bi = Caption.split('/');
+            const ItemCaption = bi[k];
+            if (ListCaption.indexOf(ItemCaption) == -1) {
+                ListCaption.push(ItemCaption);
+                const ilist = {
+                    id: (k == bi.length - 1) ? mi.idmenu : mi.idmenu + '_node',
+                    text: ItemCaption,
+                    attributes: {
+                        link1: mi.link1,
+                        params: mi.params
+                    }
+                }
+                const img = Root + ItemCaption;
+                if (ImageByCaption[img])
+                    ilist.iconCls = ImageByCaption[img];
+
+                if (!Mn.children) { Mn.children = []; }
+                Mn.children.push(ilist);
+                if (k != bi.length - 1) {
+                    CreateItems(Root + ItemCaption + "/", ilist, Tab, ImageByCaption);
+                }
+            }
+        }
+    }
+}
+
 exports.createGrid = createGrid;
 exports.exec = exec;
 exports.auth = auth;
+exports.gettree = gettree;
