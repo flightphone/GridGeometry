@@ -20,7 +20,7 @@
 <MonoGrid IdDeclare="134" {extparams}>
   <div class="but" title="FlightCard">
     <button
-      on:click={attach}
+      onclick={attach}
       class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
     >
       <i class="material-icons">flight</i>

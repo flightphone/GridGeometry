@@ -22,7 +22,7 @@
 <MonoGrid IdDeclare="1445" extparams={extparams}>
   <div class="but" title="files">
     <button
-      on:click={attach}
+      onclick={attach}
       class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
     >
       <i class="material-icons">attachment</i>

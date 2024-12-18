@@ -297,7 +297,7 @@
           >
             <div class="but" title="save record">
               <button
-                on:click={save}
+                onclick={save}
                 class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
               >
                 <i class="material-icons">save</i>

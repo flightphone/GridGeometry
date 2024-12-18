@@ -83,7 +83,7 @@
 	  
       <div class="mdl-card__actions mdl-card--border">
         <button
-          on:click={login}
+          onclick={login}
           class="mdl-cell mdl-cell--12-col mdl-button mdl-button--raised mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-color-text--white"
         >
           Login

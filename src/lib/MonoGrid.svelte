@@ -146,7 +146,7 @@
     {#if DelProc}
       <div class="but" title="add record">
         <button
-          on:click={openNew}
+          onclick={openNew}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">add</i>
@@ -156,7 +156,7 @@
     {#if EditProc}
       <div class="but" title="edit record">
         <button
-          on:click={openEdit}
+          onclick={openEdit}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">edit</i>
@@ -166,7 +166,7 @@
     {#if DelProc}
       <div class="but" title="delete record">
         <button
-          on:click={rowDelete}
+          onclick={rowDelete}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">delete</i>
@@ -175,7 +175,7 @@
     {/if}
     <div class="but" title="refresh">
       <button
-        on:click={agrid.updateTab}
+        onclick={agrid.updateTab}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
       >
         <i class="material-icons">refresh</i>
@@ -184,7 +184,7 @@
     {#if KeyValue}
       <div class="but" title="detail">
         <button
-          on:click={agrid.openDetail}
+          onclick={agrid.openDetail}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">details</i>
@@ -195,7 +195,7 @@
     {#if IdDeclareSet}
       <div class="but" title="settings">
         <button
-          on:click={openSetting}
+          onclick={openSetting}
           class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
         >
           <i class="material-icons">settings</i>
@@ -205,7 +205,7 @@
 
     <div class="but" title="export csv">
       <button
-        on:click={agrid.exportCsv}
+        onclick={agrid.exportCsv}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
       >
         <i class="material-icons">download</i>
