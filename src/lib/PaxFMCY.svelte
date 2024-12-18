@@ -2,11 +2,14 @@
   import { mainObj } from "../store";
   import { onMount } from "svelte";
   import { GridGeometry } from "../models/GridGeometry";
-  let { FC_PK } = $props();
+  let { FC_PK, saveData } = $props();
   let adiv;
   let agrid;
   let acols = ["F", "C", "M", "Y"];
 
+  saveData.getPax = ()=>{
+    return agrid.mid.MainTab;
+  }
   onMount(async () => {
     const agridParam = {
       SQLParams: {

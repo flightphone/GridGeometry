@@ -2,9 +2,13 @@
   import { mainObj } from "../store";
   import { onMount } from "svelte";
   import { GridGeometry } from "../models/GridGeometry";
-  let { QD_PK } = $props();
+  let { QD_PK, saveData } = $props();
   let adiv;
   let agrid;
+
+  saveData.getCargoPost = ()=>{
+    return agrid.mid.MainTab;
+  }
 
   let newRow = () => {
     let nn = 0;

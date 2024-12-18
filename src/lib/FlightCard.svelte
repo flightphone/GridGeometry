@@ -54,6 +54,45 @@
     rs[0].setData(row);
   };
 
+  const saveData = {
+    getPax: () => {
+      return null;
+    },
+    getCargo: () => {
+      return null;
+    },
+    getCargoPost: () => {
+      return null;
+    },
+  };
+  let save = async () => {
+    const flight = {
+      FlightCard: editor.WorkRow,
+      OrderD: agrid.mid.MainTab.filter((e) => e.QD_isPosted),
+      Pax: saveData.getPax(),
+      Cargo: saveData.getCargo(),
+      CargoPost: saveData.getCargoPost(),
+      QD_PK: QD_PK,
+    };
+    const url = `${mainObj.baseUrl}/savefc`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+         Authorization: mainObj.token,
+      },
+      body: JSON.stringify(flight),
+    });
+
+    const res = await response.json();
+    if (res.Error) 
+      mainObj.alert(res.Error, "Error");
+    else
+      mainObj.alert("Flight card saved", "Warning");
+
+  };
+
   onMount(async () => {
     pdialog = new ModalDialog("300px", "750px", () => {
       pdialog.close();
@@ -187,10 +226,10 @@
       mainObj.alert(agrid.mid.Error, "Error");
       return;
     }
-    
+
     //console.log(agrid.mid.MainTab);
     agrid.mid.MainTab.forEach((data) => {
-      data["QD_isPosted"] = (data["QD_isPosted"] == 1);
+      data["QD_isPosted"] = data["QD_isPosted"] == 1;
       if (data["ClassName"] == "RegulationPrint.UTGCargoPost") {
         QD_PK = data["QD_PK"];
         s756 = true;
@@ -218,15 +257,15 @@
 </script>
 
 <div bind:this={pdiv} style="height:100%; width:100%">
-  <PaxFmcy FC_PK={extparams.FC_PK} />
+  <PaxFmcy FC_PK={extparams.FC_PK} {saveData} />
 </div>
 <div bind:this={cdiv} style="height:100%; width:100%">
-  <Cargo FC_PK={extparams.FC_PK} />
+  <Cargo FC_PK={extparams.FC_PK} {saveData} />
 </div>
 
 <div bind:this={sdiv} style="height:100%; width:100%">
   {#if s756}
-    <CargoPost {QD_PK} />
+    <CargoPost {QD_PK} {saveData} />
   {/if}
 </div>
 
@@ -235,7 +274,6 @@
     style="height:calc(100% - 6px); margin: 3px;border: 1px solid gray; display: flex;
   flex-direction: row;"
   >
-    
     <div
       bind:this={fcdiv}
       style="width:300px; margin: 0px 0px 0px 3px;height:calc(100%)"
@@ -259,6 +297,7 @@
           >
             <div class="but" title="save record">
               <button
+                on:click={save}
                 class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
               >
                 <i class="material-icons">save</i>

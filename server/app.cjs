@@ -5,6 +5,7 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 require('./config.cjs');
 const svgrid = require('./models/svgrid.cjs');
+const fc = require('./models/fc.cjs')
 const { console } = require('inspector');
 
 
@@ -63,6 +64,14 @@ app.post('/gettree', authenticateJWT, async (req, res) => {
 app.post('/exec', authenticateJWT, async function (req, res, next) {
   let params = req.body;
   const result = await svgrid.exec(params, req.user.username)
+    .catch((err) => { return { Error: err.toString() } });
+  res.json(result);
+});
+
+
+app.post('/savefc', authenticateJWT, async function (req, res) {
+  let params = req.body;
+  const result = await fc.save(params, req.user.username)
     .catch((err) => { return { Error: err.toString() } });
   res.json(result);
 });

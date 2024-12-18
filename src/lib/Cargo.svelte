@@ -2,10 +2,13 @@
   import { mainObj } from "../store";
   import { onMount } from "svelte";
   import { GridGeometry } from "../models/GridGeometry";
-  let { FC_PK } = $props();
+  let { FC_PK, saveData } = $props();
   let adiv;
   let agrid;
   
+  saveData.getCargo = ()=>{
+    return agrid.mid.MainTab;
+  }
 
   onMount(async () => {
     const agridParam = {
