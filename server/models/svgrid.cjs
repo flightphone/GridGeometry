@@ -153,11 +153,7 @@ async function createGrid(params) {
 
 }
 
-async function exec(params, Account) {
-    //const cnstr = config.connectionString;
-    const sqlConfig = config.sqlConfig;
-    const pool = new mssql.ConnectionPool(sqlConfig);
-    await pool.connect();
+async function exec_proc(params, Account, pool) {
     const request = new mssql.Request(pool);
 
     const EditProc = params.EditProc;
@@ -188,7 +184,13 @@ async function exec(params, Account) {
         ColumnTab: ColumnTab
     };
 
+}
 
+async function exec(params, Account) {
+    const sqlConfig = config.sqlConfig;
+    const pool = new mssql.ConnectionPool(sqlConfig);
+    await pool.connect();
+    return await exec_proc(params, Account, pool);
 }
 
 
@@ -230,7 +232,7 @@ async function gettree(Account) {
     const rows_image = result1.recordset;
     const ImageByCaption = {};
     const ImageUrl = {};
-    rows_image.forEach ((r)=> {
+    rows_image.forEach((r) => {
         ImageByCaption[r.caption] = `tree${r.idimage}`;
         ImageUrl[`tree${r.idimage}`] = r.image_bmp;
     })
@@ -245,7 +247,7 @@ async function gettree(Account) {
             params: ""
         },
     });
-    return {menu:rootItem.children, image:ImageUrl};
+    return { menu: rootItem.children, image: ImageUrl };
 }
 
 
@@ -284,6 +286,7 @@ function CreateItems(Root, Mn, Tab, ImageByCaption) {
 }
 
 exports.createGrid = createGrid;
+exports.exec_proc = exec_proc;
 exports.exec = exec;
 exports.auth = auth;
 exports.gettree = gettree;
