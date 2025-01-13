@@ -3,6 +3,8 @@ const { XMLParser } = require("fast-xml-parser");
 const mssql = require('mssql')
 const { authenticate } = require('ldap-authentication')
 
+const fs = require('node:fs');
+
 
 async function createGrid(params) {
     const grid = {}
@@ -142,12 +144,15 @@ async function createGrid(params) {
     grid.Setting = Setting;
     grid.MainTab = MainTab;
     grid.DefaultValues = {};
+
     /*
-    const audtu = ["audtuser", "last_change_user", "TF_Audtuser"]
-    audtu.forEach((f) => {
-        grid.DefaultValues[f] = params.Account;
+    let jgrid = JSON.stringify(grid);
+    let fname = `./public/usmart/FiderStart${id}.json`;
+    fs.writeFile(fname, jgrid, err => {
+        if (err) {
+            console.error(err);
+        }
     });
-    grid.Account = params.Account;
     */
     return grid;
 

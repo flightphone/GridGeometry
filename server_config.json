@@ -6,6 +6,7 @@
         "password": "aA12345678",
         "database": "uFlights",
         "server": "localhost\\SQLEXPRESS",
+        "requestTimeout": 45000,
         "options": {
             "encrypt": false, 
             "tdsVersion": "7_3_B"

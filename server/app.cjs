@@ -8,13 +8,10 @@ const svgrid = require('./models/svgrid.cjs');
 const fc = require('./models/fc.cjs')
 const { console } = require('inspector');
 
-
-
-
-
-
 const app = express();
 app.use(cors());
+
+const port = process.env.PORT || 1793;
 
 const spath = path.join(__dirname, '../dist');
 app.use(express.static(spath))
@@ -77,7 +74,7 @@ app.post('/savefc', authenticateJWT, async function (req, res) {
 });
 
 
-const port = 1793;
+
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}/#81`);
 });

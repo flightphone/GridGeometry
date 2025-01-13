@@ -12,7 +12,7 @@ if (sheme == "ag-theme-balham")
 
 
 let mainObj = {
-    jsonData: true,
+    jsonData: false,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {
@@ -107,6 +107,7 @@ let mainObj = {
 
             if (mainObj.jsonData) {
                 const url = `./json_grids/FinderStart${idDeclare}.json`;
+                //const url = `./usmart/FiderStart${idDeclare}.json`;
                 const response = await fetch(url);
                 mid = await response.json();
             }
