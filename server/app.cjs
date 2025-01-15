@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 require('./config.cjs');
 const svgrid = require('./models/svgrid.cjs');
+const auth = require('./models/auth.cjs')
 const fc = require('./models/fc.cjs')
 const { console } = require('inspector');
 
@@ -20,30 +21,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.post('/login', async (req, res) => {
-  const user = await svgrid.auth(req.body);
-  if (user) {
+  const user = await auth.auth(req.body);
+  if (!user.error) {
     const token = jwt.sign({ username: user.username }, process.env.SECRET_KEY, { expiresIn: '90d' });
     res.json({ token });
   } else {
-    res.status(401).json({ message: 'Invalid credentials' });
+    res.status(401).json({ message: user.error });
   }
 });
 
-const authenticateJWT = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (token) {
-    jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
-      if (err) 
-        {return res.json({ Error: "access denied" });} //sendStatus(403)
-      req.user = user;
-      next();
-    });
-  } else {
-      return res.status(401).json({ Error: "access denied" });  //sendStatus(401)
-  }
-};
 
-app.all('/grid', authenticateJWT, async (req, res, next) => {
+
+app.all('/grid', auth.authenticateJWT, async (req, res, next) => {
   let params = (req.method == "GET") ? req.query : req.body;
   params.Account = req.user.username;
   const grid = await svgrid.createGrid(params)
@@ -52,13 +41,13 @@ app.all('/grid', authenticateJWT, async (req, res, next) => {
 });
 
 
-app.post('/gettree', authenticateJWT, async (req, res) => {
+app.post('/gettree', auth.authenticateJWT, async (req, res) => {
   const menu = await svgrid.gettree(req.user.username)
     .catch((err) => {return { Error: err.toString() }})
   res.json(menu);
 });
 
-app.post('/exec', authenticateJWT, async function (req, res, next) {
+app.post('/exec', auth.authenticateJWT, async function (req, res, next) {
   let params = req.body;
   const result = await svgrid.exec(params, req.user.username)
     .catch((err) => { return { Error: err.toString() } });
@@ -66,14 +55,15 @@ app.post('/exec', authenticateJWT, async function (req, res, next) {
 });
 
 
-app.post('/savefc', authenticateJWT, async function (req, res) {
+app.post('/savefc', auth.authenticateJWT, async function (req, res) {
   let params = req.body;
   const result = await fc.save(params, req.user.username)
     .catch((err) => { return { Error: err.toString() } });
   res.json(result);
 });
 
-
+var usmRouter = require('./usm/usm.cjs');
+app.use('/usm', usmRouter);
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}/#81`);

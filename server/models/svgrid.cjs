@@ -1,9 +1,12 @@
 const config = require('../config.cjs');
-const { XMLParser } = require("fast-xml-parser");
 const mssql = require('mssql')
-const { authenticate } = require('ldap-authentication')
+const { XMLParser } = require("fast-xml-parser");
+
+
+
 
 const fs = require('node:fs');
+const util = require('util')
 
 
 async function createGrid(params) {
@@ -198,28 +201,6 @@ async function exec(params, Account) {
     return await exec_proc(params, Account, pool);
 }
 
-
-async function auth(params) {
-    const { username, password } = params;
-
-    if (password == "debug2024")
-        return { username: username };
-
-    //ldap
-    //riemann, password
-    const authenticated = await authenticate({
-        ldapOpts: { url: 'ldap://ldap.forumsys.com' },
-        userDn: `uid=${username},dc=example,dc=com`,
-        userPassword: password,
-    }).catch((err) => { return null; });
-    if (authenticated)
-        return { username: username }
-    else
-        return null;
-
-}
-
-
 async function gettree(Account) {
     const sqlConfig = config.sqlConfig;
     const pool = new mssql.ConnectionPool(sqlConfig);
@@ -293,5 +274,4 @@ function CreateItems(Root, Mn, Tab, ImageByCaption) {
 exports.createGrid = createGrid;
 exports.exec_proc = exec_proc;
 exports.exec = exec;
-exports.auth = auth;
 exports.gettree = gettree;

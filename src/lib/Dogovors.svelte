@@ -2,24 +2,39 @@
   import MonoGrid from "./MonoGrid.svelte";
   import { mainObj } from "../store";
   import { onMount } from "svelte";
-  let url = $state("");
+  let agr_key;
   let href;
   let { IdDeclare, extparams } = $props();
 
   extparams.onSelect = (e) => {
-    if (e.node.isSelected())
-      url = `${mainObj.baseUrl}Docfiles/dir?id=${e.data["agr_key"]}/`;
+    if (e.node.isSelected()) agr_key = `${e.data["agr_key"]}`;
   };
 
-  let attach = (e) => {
+  let attach = async (e) => {
+    const url = `${mainObj.baseUrl}/usm/newsid`;
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: mainObj.token,
+      },
+    });
+    let res = await response.json();
+    if (res.Error)
+    {
+      mainObj.alert(res.Error, "Error")
+      return
+    }
+    let link = res.link + agr_key.toString() + '/'
+    //console.log(link)
+    href.href = link
     href.click();
   };
 
   onMount(async () => {});
 </script>
 
-<a bind:this={href} href={url} style="display: none;" target="_blank"></a>
-<MonoGrid IdDeclare="1445" extparams={extparams}>
+<a bind:this={href} style="display: none;" target="_blank"></a>
+<MonoGrid IdDeclare="1445" {extparams}>
   <div class="but" title="files">
     <button
       onclick={attach}
