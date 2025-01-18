@@ -1,10 +1,10 @@
 <script>
-  import { mainObj, openMap } from "../store";
+  import { mainObj, openMap } from "../../store";
   import { onMount } from "svelte";
-  import { Editor } from "../models/Editor";
-  import { Splitter } from "../models/Splitter";
-  import { GridGeometry } from "../models/GridGeometry";
-  import { ModalDialog } from "../models/ModalDialog";
+  import { Editor } from "../../models/Editor";
+  import { Splitter } from "../../models/Splitter";
+  import { GridGeometry } from "../../models/GridGeometry";
+  import { ModalDialog } from "../../models/ModalDialog";
   import PaxFmcy from "./PaxFMCY.svelte";
   import Cargo from "./Cargo.svelte";
   import CargoPost from "./CargoPost.svelte";

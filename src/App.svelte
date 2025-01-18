@@ -4,9 +4,10 @@
   import { CreateTreeTree, treeMap } from "./models/TreeCore";
   import { onMount } from "svelte";
   import MonoGrid from "./lib/MonoGrid.svelte";
-  import Dogovors from "./lib/Dogovors.svelte";
-  import FlightCard from "./lib/FlightCard.svelte";
-  import FlightCardsList from "./lib/FlightCardsList.svelte";
+  import Dogovors from "./lib/usm/Dogovors.svelte";
+  import FlightCard from "./lib/usm/FlightCard.svelte";
+  import FlightCardsList from "./lib/usm/FlightCardsList.svelte";
+  import ServiceReport from "./lib/usm/ServiceReport.svelte";
   import { mainObj, openMap, openIDs } from "./store";
   import { ModalDialog } from "./models/ModalDialog";
   import Login from "./lib/Login.svelte";
@@ -45,6 +46,7 @@
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
+    if (link1 == "RegulationPrint.ServiceReport" || link1 == "RegulationPrint.repSDM") return ServiceReport;
     if (link1 == "exit") return Login;
     if (params) return MonoGrid;
     else return "not implemented";

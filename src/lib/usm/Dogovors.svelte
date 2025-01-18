@@ -1,6 +1,6 @@
 <script>
-  import MonoGrid from "./MonoGrid.svelte";
-  import { mainObj } from "../store";
+  import MonoGrid from "../MonoGrid.svelte";
+  import { mainObj } from "../../store";
   import { onMount } from "svelte";
   let agr_key;
   let href;

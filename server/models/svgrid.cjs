@@ -1,11 +1,6 @@
 const config = require('../config.cjs');
 const mssql = require('mssql')
 const { XMLParser } = require("fast-xml-parser");
-
-
-
-
-const fs = require('node:fs');
 const util = require('util')
 
 
@@ -141,22 +136,13 @@ async function createGrid(params) {
     grid.Fcols = Fcols;
     grid.ColumnTab = ColumnTab;
     grid.IdDeclareSet = IdDeclareSet;
-    grid.EditProc = rd["editproc"]?.toLowerCase();;
+    grid.EditProc = rd["editproc"]?.toLowerCase();
     grid.DelProc = rd["delproc"]?.toLowerCase();
+    grid.SaveFieldList = rd["savefieldlist"];
     grid.ReferEdit = ReferEdit;
     grid.Setting = Setting;
     grid.MainTab = MainTab;
     grid.DefaultValues = {};
-
-    /*
-    let jgrid = JSON.stringify(grid);
-    let fname = `./public/usmart/FiderStart${id}.json`;
-    fs.writeFile(fname, jgrid, err => {
-        if (err) {
-            console.error(err);
-        }
-    });
-    */
     return grid;
 
 }

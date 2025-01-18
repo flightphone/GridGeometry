@@ -1,0 +1,652 @@
+{
+    "Editors": [
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Рейс",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_flNumber",
+            "FieldCaption": "Номер рейса",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_flDirection",
+            "FieldCaption": "Направление",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_Date",
+            "FieldCaption": "Дата/Время рейса",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "disabled": true,
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_Cancel",
+            "FieldCaption": "Отменен",
+            "DisplayFormat": "",
+            "joinRow": {
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ID": "FC_Cancel"
+                },
+                "keyField": "ID",
+                "valField": "FC_Cancel",
+                "FindConrol": {
+                    "DispField": "DESCR",
+                    "MainTab": [
+                        {
+                            "ID": 0,
+                            "DESCR": "Нет"
+                        },
+                        {
+                            "ID": 1,
+                            "DESCR": "Да"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "FieldName": "CU_NameRu",
+            "FieldCaption": "Заказчик",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "136",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AL_NameRu": "CU_NameRu",
+                    "AL_PK": "FC_CU"
+                },
+                "keyField": null,
+                "valField": null
+            }
+        },
+
+        {
+            "FieldName": "LS_NameRu",
+            "FieldCaption": "Набор услуг",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "136",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AL_NameRu": "LS_NameRu",
+                    "AL_PK": "FC_LS"
+                },
+                "keyField": null,
+                "valField": null
+            }
+        },
+        
+        {
+            "FieldName": "FC_ACVersion",
+            "FieldCaption": "СпецТариф",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1637",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ST_PK": "FC_ACVersion"
+                },
+                "keyField": "ST_PK",
+                "valField": "FC_ACVersion",
+                "params": {
+                    "ST_AL": "FC_AL",
+                    "FC_Date": "FC_Date"
+                }
+            }
+        },
+
+
+        {
+            "FieldName": "FC_flState",
+            "FieldCaption": "Статус рейса",
+            "DisplayFormat": "",
+            "joinRow": {
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ID": "FC_flState"
+                },
+                "keyField": "ID",
+                "valField": "FC_flState",
+                "FindConrol": {
+                    "DispField": "ID",
+                    "MainTab": [
+                        {
+                            "ID": "План"
+                        },
+                        {
+                            "ID": "Закрыт"
+                        },
+                        {
+                            "ID": "Проверен"
+                        },
+                        {
+                            "ID": "Проведен"
+                        }
+                        ,
+                        {
+                            "ID": "Архив"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "FieldName": "FC_flCategory",
+            "FieldCaption": "Категория рейса",
+            "DisplayFormat": "",
+            "joinRow": {
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ID": "FC_flCategory"
+                },
+                "keyField": "ID",
+                "valField": "FC_flCategory",
+                "FindConrol": {
+                    "DispField": "ID",
+                    "MainTab": [
+                        {
+                            "ID": "ЦР"
+                        },
+                        {
+                            "ID": "Чартер"
+                        },
+                        {
+                            "ID": "Груз"
+                        },
+                        {
+                            "ID": "Перегон"
+                        },
+                        {
+                            "ID": "VIP"
+                        },
+                        {
+                            "ID": "Технич"
+                        },
+                        {
+                            "ID": "Возврат"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "FieldName": "FC_flType",
+            "FieldCaption": "Тип рейса",
+            "DisplayFormat": "",
+            "joinRow": {
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ID": "FC_flType"
+                },
+                "keyField": "ID",
+                "valField": "FC_flType",
+                "FindConrol": {
+                    "DispField": "ID",
+                    "MainTab": [
+                        {
+                            "ID": "ВВЛ"
+                        },
+                        {
+                            "ID": "МВЛ"
+                        },
+                        {
+                            "ID": "СНГ"
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            "FieldName": "AL_NameRu",
+            "FieldCaption": "Авиакомпания",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "136",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AL_NameRu": "AL_NameRu",
+                    "AL_PK": "FC_AL"
+                },
+                "keyField": null,
+                "valField": null
+            }
+        },
+        
+        {
+            "FieldName": "AR_RegNumber",
+            "FieldCaption": "ВС",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "138",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AR_RegNumber": "AR_RegNumber",
+                    "AR_PK": "FC_AR"
+                },
+                "keyField": null,
+                "valField": null
+            }
+        },
+        
+        {
+            "FieldName": "FC_OriginAODB",
+            "FieldCaption": "АП вылета",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_DestAODB",
+            "FieldCaption": "АП прибытия",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        
+        
+               
+       
+        
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Вылет",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_STD",
+            "FieldCaption": "STD",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_ETD",
+            "FieldCaption": "ETD",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_OBT",
+            "FieldCaption": "OBT",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_ATD",
+            "FieldCaption": "ATD",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Прилет",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_STA",
+            "FieldCaption": "STA",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_ETA",
+            "FieldCaption": "ETA",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_ATA",
+            "FieldCaption": "ATA",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Регистрация, Посадка",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxChekInTime",
+            "FieldCaption": "Регистрация (начало)",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxChekOutTime",
+            "FieldCaption": "Регистрация (окончание)",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxBoardingOn",
+            "FieldCaption": "Посадка (начало)",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxBoardingOff",
+            "FieldCaption": "Посадка (окончание)",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_DispReadyTime",
+            "FieldCaption": "Время готовности ПДС",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+
+
+        
+        {
+            "FieldName": "FC_StandNum",
+            "FieldCaption": "Стоянка",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_RM",
+            "FieldCaption": "Перрон",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "157",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "RM_PK": "FC_RM"
+                },
+                "keyField": "RM_PK",
+                "valField": "FC_RM"
+            }
+        },
+
+        {
+            "FieldName": "FC_Terminal",
+            "FieldCaption": "Терминал",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_Gate",
+            "FieldCaption": "Выход",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Пассажиры",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxAdlt",
+            "FieldCaption": "ВЗР",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxChld",
+            "FieldCaption": "РБ",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PaxInf",
+            "FieldCaption": "РМ",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Груз/багаж",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_CargoWt",
+            "FieldCaption": "Груз",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PostWt",
+            "FieldCaption": "Почта",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        
+        {
+            "FieldName": "FC_TotlBagWt",
+            "FieldCaption": "Багаж",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        
+        
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Топливо",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_FuelingTime",
+            "FieldCaption": "FC_FuelingTime",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_FlightFuel",
+            "FieldCaption": "FC_FlightFuel",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_ChargeFuel",
+            "FieldCaption": "FC_ChargeFuel",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+
+        
+
+        {
+            "FieldName": "FC_apAddInfo",
+            "FieldCaption": "АП информация",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_DelayCodePr",
+            "FieldCaption": "Код РПП",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_LateArrival",
+            "FieldCaption": "ППР",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_DelayCodeFin",
+            "FieldCaption": "Код задержки UTG",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        
+
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "AODB",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+
+        {
+            "FieldName": "FC_ACRegAODB",
+            "FieldCaption": "Борт № (AODB)",
+            "DisplayFormat": "",
+            "disabled":true,
+            "joinRow": null
+        },
+        
+        {
+            "FieldName": "FC_ACTypeAODB",
+            "FieldCaption": "Тип ВС (AODB)",
+            "DisplayFormat": "",
+            "disabled":true,
+            "joinRow": null
+        },
+        
+        {
+            "FieldName": "FC_alCodeICAO",
+            "FieldCaption": "Код АК (AODB)",
+            "DisplayFormat": "",
+            "disabled":true,
+            "joinRow": null
+        },
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        {
+            "FieldName": "$stop_group",
+            "FieldCaption": "-",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "Служебное",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_PK",
+            "FieldCaption": "FC_PK",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FLT_ID",
+            "FieldCaption": "FLT_ID",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_Airport",
+            "FieldCaption": "Аэропорт",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_CreationDateTime",
+            "FieldCaption": "Карточка создана",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_LastEditionDateTime",
+            "FieldCaption": "Карточка коррект",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_Crew",
+            "FieldCaption": "Экипаж",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        },
+        {
+            "FieldName": "FC_LastEditionUser",
+            "FieldCaption": "Пользователь",
+            "DisplayFormat": "",
+            "disabled": true,
+            "joinRow": null
+        }
+
+    ],
+    "SaveFieldList": [
+        "FC_PK"
+    ],
+    "text": null
+}

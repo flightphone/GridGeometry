@@ -1,0 +1,453 @@
+{
+    "Editors": [
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "1. Общие параметры тарифа",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Name",
+            "FieldCaption": "Наименование",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "SV_Caption",
+            "FieldCaption": "Услуга",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "142",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "SV_Caption": "SV_Caption",
+                    "SV_PK": "TF_SV"
+                },
+                "keyField": null,
+                "valField": null,
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "AL_UTG",
+            "FieldCaption": "АК",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "136",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AL_UTG": "AL_UTG",
+                    "AL_PK": "TF_AL"
+                },
+                "keyField": null,
+                "valField": null,
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "AP_IATA",
+            "FieldCaption": "Аэропорт",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1234",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "AP_IATA": "AP_IATA",
+                    "AP_PK": "TF_AP"
+                },
+                "keyField": "AP_PK",
+                "valField": "TF_AP",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_DateBeg",
+            "FieldCaption": "Начало",
+            "DisplayFormat": "dd.MM.yyyy",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_DateEnd",
+            "FieldCaption": "Окончание",
+            "DisplayFormat": "dd.MM.yyyy",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Type",
+            "FieldCaption": "Тип",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1239",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_Type"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_Type",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_Agent",
+            "FieldCaption": "Агент",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1240",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_Agent"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_Agent",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TV_Name",
+            "FieldCaption": "Оператор",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1530",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "OP_Alias": "TV_Name",
+                    "OP_PK": "TF_TV"
+                },
+                "keyField": "OP_PK",
+                "valField": "TF_TV"
+            }
+        },
+        {
+            "FieldName": "$stop_group"
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "2. Правила применения тарифа",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "AT_UTG",
+            "FieldCaption": "ТипВС",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1230",
+                "classname": "Bureau.Finder",
+                "fields": {
+                    "AT_UTG": "AT_UTG",
+                    "AT_PK": "TF_AT"
+                },
+                "keyField": null,
+                "valField": null,
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_MTOW_Range",
+            "FieldCaption": "MTOW",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1235",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_MTOW_Range"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_MTOW_Range",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_flType",
+            "FieldCaption": "Тип рейса",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1237",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_flType"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_flType",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_Terminal",
+            "FieldCaption": "Терминал",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_flCategory",
+            "FieldCaption": "Категория рейса",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1236",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_flCategory"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_flCategory",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_FlDirection",
+            "FieldCaption": "Направление",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1238",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_FlDirection"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_FlDirection",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "RM_Name",
+            "FieldCaption": "Перрон",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1231",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "RM_Name": "RM_Name",
+                    "RM_PK": "TF_RM"
+                },
+                "keyField": "RM_PK",
+                "valField": "TF_RM",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_TypeStands",
+            "FieldCaption": "Тип стоянки",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_ST_Code",
+            "FieldCaption": "СпецТариф",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1637",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "ST_PK": "TF_ST_Code",
+                    "ST_Code": "ST_Code"
+                },
+                "keyField": "ST_PK",
+                "valField": "TF_ST_Code",
+                "params": {
+                    "ST_AL": "TF_AL",
+                    "FC_Date":"TF_DateBeg"
+                },
+                "FindConrol": {
+                    "DispField": "ST_Code",
+                    "MainTab": []
+                }
+            }
+        },
+        {
+            "FieldName": "TF_LowLimit",
+            "FieldCaption": "Нижний предел",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_UpperLimit",
+            "FieldCaption": "Верхний предел",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$stop_group"
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "3. Правила расчета",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_TariffMain",
+            "FieldCaption": "Тариф за ед/час",
+            "DisplayFormat": "#,##0.00",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_PayExec",
+            "FieldCaption": "Сумма за факт",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_PayCancel",
+            "FieldCaption": "Сумма отказа",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_PayMin",
+            "FieldCaption": "Минимальная сумма",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_PayMax",
+            "FieldCaption": "Максимальная сумма",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Round",
+            "FieldCaption": "Округление",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Discount",
+            "FieldCaption": "Скидка",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Surcharge",
+            "FieldCaption": "Надбавка",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "$stop_group"
+        },
+        {
+            "FieldName": "$start_group",
+            "FieldCaption": "4. Дополнительно",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Currency",
+            "FieldCaption": "Валюта",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1241",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_Currency"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_Currency",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_VAT_str",
+            "FieldCaption": "НДС",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": "1242",
+                "classname": "Bureau.GridCombo",
+                "fields": {
+                    "Statusname": "TF_VAT_str"
+                },
+                "keyField": "Statusname",
+                "valField": "TF_VAT_str",
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_VAT_rate",
+            "FieldCaption": "ВеличинаНДС",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Unit",
+            "FieldCaption": "Ед.изм.",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Description",
+            "FieldCaption": "Описание",
+            "DisplayFormat": "",
+            "joinRow": {
+                "IdDeclare": null,
+                "classname": null,
+                "fields": null,
+                "keyField": null,
+                "valField": null,
+                "FindConrol": null
+            }
+        },
+        {
+            "FieldName": "TF_Comment",
+            "FieldCaption": "Комментарий",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_ReportName",
+            "FieldCaption": "Наименование для отчетов",
+            "DisplayFormat": "",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Audtdate",
+            "FieldCaption": "Время изменения",
+            "DisplayFormat": "dd.MM.yyyy HH:mm",
+            "joinRow": null
+        },
+        {
+            "FieldName": "TF_Audtuser",
+            "FieldCaption": "Пользователь",
+            "DisplayFormat": "",
+            "joinRow": null
+        }
+    ],
+    "SaveFieldList": [
+        "TF_PK",
+        "TF_Name",
+        "TF_Type",
+        "TF_SV",
+        "TF_DateBeg",
+        "TF_DateEnd",
+        "TF_AL",
+        "TF_AP",
+        "TF_Agent",
+        "TF_AT",
+        "TF_MTOW_Range",
+        "TF_flType",
+        "TF_Terminal",
+        "TF_flCategory",
+        "TF_FlDirection",
+        "TF_RM",
+        "TF_TypeStands",
+        "TF_TV",
+        "TF_LowLimit",
+        "TF_UpperLimit",
+        "TF_TariffMain",
+        "TF_PayExec",
+        "TF_PayCancel",
+        "TF_PayMin",
+        "TF_PayMax",
+        "TF_Round",
+        "TF_Currency",
+        "TF_VAT_str",
+        "TF_VAT_rate",
+        "TF_Unit",
+        "TF_Description",
+        "TF_Comment",
+        "TF_Discount",
+        "TF_Surcharge",
+        "TF_ReportName",
+        "TF_Audtuser"
+    ],
+    "text": null
+}

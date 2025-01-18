@@ -56,25 +56,29 @@
       </div>
       <div class="mdl-card__supporting-text">
         <div
-          class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+          class="mdl-textfield mdl-js-textfield mdl-textfield"
         >
           <input
             class="mdl-textfield__input"
             id="login"
+            name="login"
+            placeholder="login"
             bind:value={username}
           />
-          <label class="mdl-textfield__label" for="login">Login</label>
+          <!--<label class="mdl-textfield__label" for="login">Login</label>-->
         </div>
         <div
-          class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+          class="mdl-textfield mdl-js-textfield mdl-textfield"
         >
           <input
             class="mdl-textfield__input"
             type="password"
             id="password"
+            name="password"
             bind:value={password}
+            placeholder="password"
           />
-          <label class="mdl-textfield__label" for="password">Password</label>
+          <!--<label class="mdl-textfield__label" for="password">Password</label>-->
         </div>
 		<div>
 			{message}

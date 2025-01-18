@@ -1,5 +1,5 @@
 <script>
-  import MonoGrid from "./MonoGrid.svelte";
+  import MonoGrid from "../MonoGrid.svelte";
   let url = $state("");
   let href;
   let { IdDeclare, extparams } = $props();

@@ -1,7 +1,7 @@
 <script>
-  import { mainObj } from "../store";
+  import { mainObj } from "../../store";
   import { onMount } from "svelte";
-  import { GridGeometry } from "../models/GridGeometry";
+  import { GridGeometry } from "../../models/GridGeometry";
   let { QD_PK, saveData } = $props();
   let adiv;
   let agrid;

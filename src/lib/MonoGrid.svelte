@@ -133,6 +133,10 @@
         {}
       );
     }
+    //17/01/2025
+    if (extparams.onMount)
+      extparams.onMount(agrid);
+
   });
 </script>
 

@@ -30,7 +30,7 @@ async function auth(params) {
     const ad = new AD(config);
     uname = username + "@glonass.ru"
     const authenticated = await ad.authenticate(uname, password).catch((err) => {
-        error = err.message;
+        error = "incorrect login or password"; //err.message;
         return false;
     });
 
