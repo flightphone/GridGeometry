@@ -7,22 +7,27 @@
   let hrefFile;
   let { IdDeclare, extparams } = $props();
   let mid;
+  let FC_PK;
 
   extparams.onMount = (e) => {
     mid = e?.mid;
     if (e?.mid?.SaveFieldList) {
       //console.log(e?.mid?.SaveFieldList)
-      hrefFile.download = e.mid.SaveFieldList.split(",")[1] + '.ods';
+      hrefFile.download = e.mid.SaveFieldList.split(",")[1] + ".ods";
       print = true;
     }
   };
 
   extparams.onSelect = (e) => {
-    if (e.node.isSelected()) url = `#FC${e.data["FC_PK"]}`;
+    if (e.node.isSelected()) {
+      url = `#FC${e.data["FC_PK"]}`;
+      FC_PK = e.data["FC_PK"];
+    }
   };
 
   extparams.onEnter = (e) => {
-    href.click();
+    if (FC_PK)
+      href.click();
   };
 
   let attach = async (e) => {

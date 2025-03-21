@@ -12,7 +12,7 @@ if (sheme == "ag-theme-balham")
 
 
 let mainObj = {
-    jsonData: true,
+    jsonData: false,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {

@@ -46,7 +46,7 @@
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
-    if (link1 == "RegulationPrint.ServiceReport" || link1 == "RegulationPrint.repSDM") return ServiceReport;
+    if (link1 == "RegulationPrint.ServiceReport" || link1 == "RegulationPrint.repSDM" || link1 == "RegulationPrint.TowReport") return ServiceReport;
     if (link1 == "exit") return Login;
     if (params) return MonoGrid;
     else return "not implemented";

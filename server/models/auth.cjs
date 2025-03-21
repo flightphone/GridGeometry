@@ -18,17 +18,17 @@ const authenticateJWT = (req, res, next) => {
 async function auth(params) {
     const { username, password } = params;
 
-    if (password == "debug2024")
+    if (password == process.env.PASSWORD_SA)
         return { username: username };
 
 
     let error = ""
     const config = {
-        url: 'ldap://192.168.114.4',
-        baseDN: 'dc=glonass,dc=ru'
+        url: process.env.LDAP,
+        baseDN: process.env.BASEDN
     }
     const ad = new AD(config);
-    uname = username + "@glonass.ru"
+    uname = username + (process.env.DOMAIN ? process.env.DOMAIN : "");
     const authenticated = await ad.authenticate(uname, password).catch((err) => {
         error = "incorrect login or password"; //err.message;
         return false;

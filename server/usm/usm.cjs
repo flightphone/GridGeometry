@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const path = require('path');
 const config = require('../config.cjs');
 const mssql = require('mssql')
 const auth = require('../models/auth.cjs')
@@ -29,7 +30,8 @@ router.post('/print', auth.authenticateJWT, async function (req, res, next) {
 async function print(params) {
   let sl = params.SaveFieldList.split(",");
   const EditProc = sl[0];
-  const srcname = `./reports/${sl[1]}.ods`;
+  const srcname = path.join(__dirname, `../../reports/${sl[1]}.ods`);
+  
   const field_name = sl[2]
   if (!(EditProc && srcname && field_name))
     throw new Error('Printer params empty');

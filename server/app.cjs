@@ -36,14 +36,14 @@ app.all('/grid', auth.authenticateJWT, async (req, res, next) => {
   let params = (req.method == "GET") ? req.query : req.body;
   params.Account = req.user.username;
   const grid = await svgrid.createGrid(params)
-    .catch((err) => {return { Error: err.toString() }})
+    .catch((err) => { return { Error: err.toString() } })
   res.json(grid);
 });
 
 
 app.post('/gettree', auth.authenticateJWT, async (req, res) => {
   const menu = await svgrid.gettree(req.user.username)
-    .catch((err) => {return { Error: err.toString() }})
+    .catch((err) => { return { Error: err.toString() } })
   res.json(menu);
 });
 
@@ -64,6 +64,7 @@ app.post('/savefc', auth.authenticateJWT, async function (req, res) {
 
 var usmRouter = require('./usm/usm.cjs');
 app.use('/usm', usmRouter);
+
 
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}/#81`);
