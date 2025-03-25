@@ -168,9 +168,9 @@
             field: "QD_QTY",
             headerName: "Qty",
             //editable: true,
-            width: 50,
+            width: 70,
             cellDataType: "number",
-            filter: false,
+            //filter: false,
             sortable: false,
             editable: (e) => {
               return e.data["ClassName"] == "RegulationPrint.UTGService";
@@ -182,11 +182,13 @@
             flex: 1,
             editable: true,
           },
+          /*
           {
             field: "SV_RespRoleInfo",
             headerName: "Responsible",
             flex: 1,
           },
+          */
           {
             field: "QD_isPosted",
             headerName: " ",
@@ -198,10 +200,12 @@
             filter: false,
             resizable: false,
           },
+          
           {
             field: "SV_CATEGORY",
             hide: true,
           },
+          
         ],
         onCellEditingStopped: (e) => {
           //console.log(e);
@@ -276,7 +280,7 @@
   >
     <div
       bind:this={fcdiv}
-      style="width:300px; margin: 0px 0px 0px 3px;height:calc(100%)"
+      style="width:450px; margin: 0px 0px 0px 3px;height:calc(100%)"
     ></div>
     <div bind:this={split} style="width:8px; background:lightgray"></div>
 

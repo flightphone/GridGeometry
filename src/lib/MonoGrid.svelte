@@ -9,11 +9,14 @@
 
   let adiv;
   let agrid;
-  let Descr = $state("loading...");
+  let Descr = $state("");
   let DelProc = $state(false);
   let EditProc = $state(false);
   let KeyValue = $state(false);
   let IdDeclareSet = $state(false);
+  let loadState = $state("loading...");
+  let totalRows = $state(0);
+  let filteredRows = $state(0);
 
   let editDialog;
   let settingDialog;
@@ -64,7 +67,6 @@
     } catch (err) {
       mainObj.alert(err.toString(), "Error:");
     }
-    
   };
 
   let saveSetting = () => {
@@ -75,18 +77,38 @@
       agrid.mid.SQLParams[f] = setting.WorkRow[f];
     });
     //console.log(agrid.mid.SQLParams);
+    loadState = "loading...";  //25/03/2025
+    totalRows = 0;
+    filteredRows = 0;
     agrid.updateTab();
   };
 
   let rowDelete = async () => {
     try {
       await agrid.rowDelete();
+      totalRows -= 1;
     } catch (err) {
       mainObj.alert(err.toString());
     }
   };
 
+  let updateData = () => {
+    loadState = "loading...";  //25/03/2025
+    totalRows = 0;
+    filteredRows = 0;
+    agrid.updateTab();
+  }
+
   onMount(async () => {
+    extparams.onUpdateData = (nrow) => {
+      loadState = "";
+      totalRows = nrow;
+      filteredRows = agrid.gridApi.getDisplayedRowCount();
+    }
+    //25.03.2025
+    extparams.gridOptions =  { onFilterChanged: (e) => {
+      filteredRows = e.api.getDisplayedRowCount();
+    }}
     agrid = new GridGeometry(IdDeclare, adiv, extparams);
     await agrid.start();
     if (agrid.mid.Error) {
@@ -96,6 +118,7 @@
       return;
     }
     agrid.init();
+    
     if (extparams.title) Descr = extparams.title;
     else Descr = agrid.mid.Descr;
 
@@ -113,8 +136,7 @@
         editor = new Editor(edJson, editDialog.content, {});
 
         //agrid.mid.ReferEdit.Editors = edJson.Editors;
-      } else 
-      {
+      } else {
         editor = new Editor(agrid.mid.ReferEdit, editDialog.content, {});
       }
 
@@ -134,9 +156,7 @@
       );
     }
     //17/01/2025
-    if (extparams.onMount)
-      extparams.onMount(agrid);
-
+    if (extparams.onMount) extparams.onMount(agrid);
   });
 </script>
 
@@ -179,7 +199,7 @@
     {/if}
     <div class="but" title="refresh">
       <button
-        onclick={agrid.updateTab}
+        onclick={updateData}
         class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab"
       >
         <i class="material-icons">refresh</i>
@@ -218,4 +238,49 @@
   </div>
 
   <div bind:this={adiv} class={mainObj.sheme} style="flex-grow: 1"></div>
+
+  <!--status bar-->
+  <div class="ag-status-bar">
+    <div class="ag-status-bar-left" data-ref="eStatusBarLeft" role="status">
+      <div
+        class="ag-status-name-value ag-status-panel ag-status-panel-total-row-count"
+        aria-hidden="false"
+      >
+        <span data-ref="eLabel">&nbsp;&nbsp;Rows:</span>&nbsp;
+        <span data-ref="eValue" class="ag-status-name-value-value">{totalRows}</span>
+      </div>
+
+      <div
+        class="ag-status-name-value ag-status-panel ag-status-panel-filtered-row-count"
+        aria-hidden="false"
+      >
+        <span data-ref="eLabel">&nbsp;&nbsp;&nbsp;&nbsp;Filtered:</span>&nbsp;
+        <span data-ref="eValue" class="ag-status-name-value-value">{filteredRows}</span>
+      </div>
+    </div>
+    <div
+      class="ag-status-bar-center"
+      data-ref="eStatusBarCenter"
+      role="status"
+    >
+    {loadState}
+    </div>
+    <div class="ag-status-bar-right" data-ref="eStatusBarRight" role="status">
+      
+      <div class="ag-status-panel ag-status-panel-aggregations">
+        <!--AG-NAME-VALUE-->
+        <div
+          class="ag-status-name-value"
+          data-ref="avgAggregationComp"
+          aria-hidden="false"
+        >
+          <span data-ref="eLabel">Version:</span>
+          <span data-ref="eValue" class="ag-status-name-value-value">asdasd &nbsp;</span>
+        </div>
+        
+       
+      </div>
+    </div>
+  </div>
+  <!--status bar-->
 </div>

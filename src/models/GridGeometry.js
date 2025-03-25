@@ -1,16 +1,46 @@
 import { mainObj } from "../store";
 import { createGrid } from 'ag-grid-community'
 
+const filterParams = {
+    comparator: (filterLocalDateAtMidnight, cellValue) => {
+      const dateAsString = cellValue;
+      const d = dateAsString;
+      if (dateAsString == null) return -1;
+      
+      const cellDate = new Date(
+        Number(d.substr(0, 4)),
+        Number(d.substr(5, 2)) - 1,
+        Number(d.substr(8, 2)),
+      );
+  
+      if (filterLocalDateAtMidnight.getTime() === cellDate.getTime()) {
+        return 0;
+      }
+  
+      if (cellDate < filterLocalDateAtMidnight) {
+        return -1;
+      }
+  
+      if (cellDate > filterLocalDateAtMidnight) {
+        return 1;
+      }
+      return 0;
+    },
+    inRangeFloatingFilterDateFormat: "Do MMM YYYY",
+  };
+
 class GridGeometry {
     constructor(idDeclare, el, extparams) {
         this.inited = false;
         this.idDeclare = idDeclare;
         this.extparams = extparams;
+        
 
         this.localParam = `FindGrid${idDeclare}`;
 
 
         this.gridOptions = {
+            pagination: false,
             rowSelection: {
                 mode: "singleRow",
                 checkboxes: false,
@@ -55,7 +85,9 @@ class GridGeometry {
                 resizable: true
             },
 
-            pagination: true,
+            pagination: false,
+            //paginationPageSize: 200000,
+            //paginationPageSizeSelector: [200000],
             suppressExcelExport: true,
 
 
@@ -74,6 +106,7 @@ class GridGeometry {
 
     init = () => {
         if (!this.gridOptions.columnDefs) {
+            
             let columnDefs = [];
             this.mid.Fcols.forEach(el => {
                 //if (el.Visible) 
@@ -87,7 +120,16 @@ class GridGeometry {
                     let key = `${this.localParam}_width_${el.FieldName}`;
                     let val = localStorage.getItem(key);
                     if (val)
+                    {
                         col.width = val;
+                    }
+                    else
+                        col.width = 100;
+                    if (el.DisplayFormat && el.DisplayFormat.indexOf("yyyy") > -1)
+                    {
+                        col.filter =  'agDateColumnFilter';    
+                        col.filterParams =  filterParams;
+                    }
                     columnDefs.push(col)
                 }
             });
@@ -107,6 +149,10 @@ class GridGeometry {
 
         });
         this.inited = true;
+        //25.03.2025
+        if (this.extparams.onUpdateData)
+            this.extparams.onUpdateData(this.mid.MainTab.length);
+
     }
 
     updateTab = async () => {
@@ -121,6 +167,9 @@ class GridGeometry {
         }
         this.mid.MainTab = data.MainTab;
         this.gridApi.setGridOption("rowData", data.MainTab);
+        //25.03.2025
+        if (this.extparams.onUpdateData)
+            this.extparams.onUpdateData(this.mid.MainTab.length);
 
     }
 

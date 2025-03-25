@@ -22,6 +22,7 @@
   let currentActive = "-1";
   let opens = [];
   let tok = "";
+  let href;
 
   function openModal() {
     dialog.showModal();
@@ -56,7 +57,7 @@
     opens = openIDs;
   };
 
-  function openItem(e) {
+  function openItem(e, button) {
     dialog.close();
     let id = e.getAttribute("idmenu");
     let link1 = e.getAttribute("link1");
@@ -65,6 +66,13 @@
       mainObj.token = "";
       localStorage.setItem("access_token", "");
     }
+    if (button == 2)
+    {
+      let link =  `${window.location.origin}/#${id}`;
+      href.href = link;
+      href.click();
+      //console.log(nurl);
+    }  
     mainObj.open(id, link1, params, {});
   }
 
@@ -154,6 +162,7 @@
 </script>
 
 <main>
+  <a bind:this={href} style="display: none;" target="_blank"></a>
   {#if smenu && tok}
     <div class="menubut">
       <button

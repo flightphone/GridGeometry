@@ -33,7 +33,7 @@ function clickTree(e, callback = (l) => { }) {
             active.classList.remove("fancytree-active");
         active = sp;
         sp.classList.add("fancytree-active");
-        callback(li);
+        callback(li, e.button);
         //alert("item");    
     }
 }
@@ -95,6 +95,10 @@ function CreateTreeTree(element = document.getElementById('tree'), mtree = {}, c
         dfs(item, root)
     }
     root.onclick = (e) => {
+        clickTree(e, callback);
+    }
+    root.oncontextmenu = (e) => {
+        e.preventDefault();
         clickTree(e, callback);
     }
     element.innerHTML = "";
