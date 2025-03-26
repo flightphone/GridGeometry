@@ -40,6 +40,11 @@
         ? "ag-theme-balham"
         : "ag-theme-balham-dark";
     localStorage.sheme = mainObj.sheme;
+    if (window.electronAPI) {
+      //26.03.2025
+      let etheme = (mainObj.sheme == "ag-theme-balham") ? "light" : "dark";
+      window.electronAPI.setTheme(etheme);
+    }
     mainObj.alarm("toggle_shema");
   }
 
@@ -47,7 +52,12 @@
     if (link1 == "RegulationPrint.FlightCardsList") return FlightCardsList;
     if (link1 == "FlightCard") return FlightCard;
     if (link1 == "RegulationPrint.Dgs.DogovorList") return Dogovors;
-    if (link1 == "RegulationPrint.ServiceReport" || link1 == "RegulationPrint.repSDM" || link1 == "RegulationPrint.TowReport") return ServiceReport;
+    if (
+      link1 == "RegulationPrint.ServiceReport" ||
+      link1 == "RegulationPrint.repSDM" ||
+      link1 == "RegulationPrint.TowReport"
+    )
+      return ServiceReport;
     if (link1 == "exit") return Login;
     if (params) return MonoGrid;
     else return "not implemented";
@@ -66,14 +76,15 @@
       mainObj.token = "";
       localStorage.setItem("access_token", "");
     }
-    if (button == 2)
-    {
-      let link =  `${window.location.origin}/#${id}`;
-      href.href = link;
-      href.click();
-      //console.log(nurl);
-    }  
-    mainObj.open(id, link1, params, {});
+    if (button == 2) {
+      let link = `${window.location.origin}/#${id}`;
+      if (window.electronAPI) {
+        window.electronAPI.open(link);
+      } else {
+        href.href = link;
+        href.click();
+      }
+    } else mainObj.open(id, link1, params, {});
   }
 
   const startapp = async () => {

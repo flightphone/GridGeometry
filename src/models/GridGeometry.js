@@ -41,6 +41,7 @@ class GridGeometry {
 
         this.gridOptions = {
             pagination: false,
+            loading: true,
             rowSelection: {
                 mode: "singleRow",
                 checkboxes: false,
@@ -137,6 +138,7 @@ class GridGeometry {
             this.gridApi.setGridOption("columnDefs", columnDefs);
         }
         this.gridApi.setGridOption("rowData", this.mid.MainTab);
+        this.gridApi.setGridOption("loading", false);
         //save width
         let wcols = this.gridApi.getColumns();
         wcols.forEach((col) => {
@@ -159,7 +161,10 @@ class GridGeometry {
 
         if (mainObj.jsonData)
             return;
+        
+        this.gridApi.setGridOption("loading", true);    
         this.gridApi.setGridOption("rowData", []);
+
         let data = await mainObj.fetch(this.idDeclare, "data", this.mid.SQLParams, this.mid.TextParams);
         if (data.Error) {
             mainObj.alert(data.Error, "Error");
@@ -167,6 +172,7 @@ class GridGeometry {
         }
         this.mid.MainTab = data.MainTab;
         this.gridApi.setGridOption("rowData", data.MainTab);
+        this.gridApi.setGridOption("loading", false);    //26.03.2025
         //25.03.2025
         if (this.extparams.onUpdateData)
             this.extparams.onUpdateData(this.mid.MainTab.length);

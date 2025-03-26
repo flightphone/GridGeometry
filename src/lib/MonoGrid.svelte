@@ -17,6 +17,7 @@
   let loadState = $state("loading...");
   let totalRows = $state(0);
   let filteredRows = $state(0);
+  let version = $state("1.0.1");
 
   let editDialog;
   let settingDialog;
@@ -24,6 +25,7 @@
   let setting;
 
   let action = "edit";
+  
 
   openMap.get(extparams.id).toggle_shema = () => {
     adiv.classList.toggle("ag-theme-balham-dark");
@@ -100,6 +102,11 @@
   }
 
   onMount(async () => {
+    if (window.electronAPI)
+    {
+      version = window.electronAPI.version();
+    }
+
     extparams.onUpdateData = (nrow) => {
       loadState = "";
       totalRows = nrow;
@@ -258,6 +265,7 @@
         <span data-ref="eValue" class="ag-status-name-value-value">{filteredRows}</span>
       </div>
     </div>
+    <!--
     <div
       class="ag-status-bar-center"
       data-ref="eStatusBarCenter"
@@ -265,6 +273,7 @@
     >
     {loadState}
     </div>
+    -->
     <div class="ag-status-bar-right" data-ref="eStatusBarRight" role="status">
       
       <div class="ag-status-panel ag-status-panel-aggregations">
@@ -275,7 +284,7 @@
           aria-hidden="false"
         >
           <span data-ref="eLabel">Version:</span>
-          <span data-ref="eValue" class="ag-status-name-value-value">asdasd &nbsp;</span>
+          <span data-ref="eValue" class="ag-status-name-value-value">{version} &nbsp;</span>
         </div>
         
        

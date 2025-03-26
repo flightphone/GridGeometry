@@ -4,15 +4,18 @@
   let href;
   let { IdDeclare, extparams } = $props();
   extparams.onSelect = (e) => {
-    if (e.node.isSelected()) url = `#FC${e.data["FC_PK"]}`;
+    if (e.node.isSelected())
+      url = `${window.location.origin}/#FC${e.data["FC_PK"]}`;
   };
 
   extparams.onEnter = (e) => {
-    href.click();
+    if (window.electronAPI) window.electronAPI.open(url);
+    else href.click();
   };
 
   let attach = (e) => {
-    href.click();
+    if (window.electronAPI) window.electronAPI.open(url);
+    else href.click();
   };
 </script>
 

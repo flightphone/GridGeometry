@@ -19,15 +19,17 @@
       },
     });
     let res = await response.json();
-    if (res.Error)
-    {
-      mainObj.alert(res.Error, "Error")
-      return
+    if (res.Error) {
+      mainObj.alert(res.Error, "Error");
+      return;
     }
-    let link = res.link + agr_key.toString() + '/'
-    //console.log(link)
-    href.href = link
-    href.click();
+    let link = res.link + agr_key.toString() + "/";
+    if (window.electronAPI) {
+      window.electronAPI.open(link);
+    } else {
+      href.href = link;
+      href.click();
+    }
   };
 
   onMount(async () => {});

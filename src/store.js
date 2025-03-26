@@ -7,6 +7,11 @@ let openIDs = []
 let sheme = localStorage.sheme ? localStorage.sheme : "ag-theme-balham-dark";
 if (sheme == "ag-theme-balham")
     document.querySelector("BODY").classList.toggle("dark");
+if (window.electronAPI) //26.03.2025    
+{
+    let etheme = (sheme == "ag-theme-balham") ? "light" : "dark";
+    window.electronAPI.setTheme(etheme)
+}
 
 
 
