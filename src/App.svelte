@@ -98,8 +98,8 @@
     );
 
     mainObj.alert = (text, title = "message") => {
-      alertdialog.content.innerHTML = `<div class="title-dialog"><h8>${title}</h8></div>
-      <div class="content-dialog">
+      //<div><h8>${title}</h8></div>
+      alertdialog.content.innerHTML = `<div><h7>${title}</h7></div><div class="content-dialog">
       <h5>${text}</h5>
       </div>
       `;
@@ -114,8 +114,7 @@
 
     mainObj.confirm = (text, title = "question", callback = () => {}) => {
       mainObj.confirmFun = callback;
-      confirmdialog.content.innerHTML = `<div class="title-dialog"><h8>${title}</h8><div>
-      <div class="content-dialog" style="">
+      confirmdialog.content.innerHTML = `<div class="content-dialog" style="">
       <h5>${text}</h5>
       </div>`;
       confirmdialog.showModal();
@@ -198,12 +197,14 @@
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"
     >
+      <!--
       <div
         style="position: absolute; right:10px; top:10px;"
         on:click={closeModal}
       >
         <button>&#10005;</button>
       </div>
+      -->
       <div class="mdl-card__title">
         <h4 class="mdl-card__title-text">{title}</h4>
       </div>
@@ -213,7 +214,10 @@
         style="flex-grow: 1; overflow-y: auto;height:400px;width:100%; margin:5px;border 1px solid lightgray;"
       ></div>
 
+      <!--class="mdl-card__actions mdl-card--border"-->
+
       <div
+        
         class="mdl-card__actions mdl-card--border"
         style="display:flex; justify-content: center;align-items:center"
       >

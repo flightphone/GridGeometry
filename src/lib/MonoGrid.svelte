@@ -88,7 +88,6 @@
   let rowDelete = async () => {
     try {
       await agrid.rowDelete();
-      totalRows -= 1;
     } catch (err) {
       mainObj.alert(err.toString());
     }

@@ -1,4 +1,4 @@
-const prodaction = false;
+const prodaction = true;
 const back_url = 'http://localhost:1793';
 
 let openMap = new Map();

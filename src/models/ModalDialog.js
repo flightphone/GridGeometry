@@ -9,7 +9,10 @@ class ModalDialog {
     constructor(height = "400", width = "600", okfun = () => { this.close() }, al = false) {
         this.height = height;
         this.width = width;
-        this.dialog = creatediv("", document.querySelector("main"), "dialog");
+        /*
+        class="ag-panel ag-default-panel ag-dialog ag-ltr ag-popup-child ag-focus-managed"
+        */
+        this.dialog = creatediv("modal", document.querySelector("main"), "dialog");
         this.dialog.style.height = `${this.height}`;
         this.dialog.style.width = `${this.width}`;
         this.dialog.style.padding = "0px";

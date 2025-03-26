@@ -30,7 +30,9 @@
 .content-dialog {
   background-color: var(white);
   color: var(--light-color);
-  margin-left:10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .dark .content-dialog {
@@ -51,7 +53,7 @@
 .dark .modal {
   background-color: var(--dark-bg);
   color: var(--dark-color);
-  border: 1px solid white;
+  border: 1px solid gray;
 }
 
 .dark .ui-fancytree {
@@ -170,6 +172,8 @@ body {
 .modal {
   width: 80vw;
   padding: 0px;
+  border: 1px solid gray;
+  border-radius: 5px;
 
 }
 
