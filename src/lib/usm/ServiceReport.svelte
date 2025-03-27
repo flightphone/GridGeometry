@@ -20,14 +20,16 @@
 
   extparams.onSelect = (e) => {
     if (e.node.isSelected()) {
-      url = `#FC${e.data["FC_PK"]}`;
+      url = `${window.location.origin}/#FC${e.data["FC_PK"]}`;
       FC_PK = e.data["FC_PK"];
     }
   };
 
   extparams.onEnter = (e) => {
-    if (FC_PK)
-      href.click();
+    if (FC_PK) {
+      if (window.electronAPI) window.electronAPI.open(url);
+      else href.click();
+    }
   };
 
   let attach = async (e) => {
@@ -50,6 +52,7 @@
         const data = await response.json();
         mainObj.alert(data.Error, "Error");
       } else {
+        //console.log(hrefFile.download);
         const data = await response.blob();
         const burl = window.URL.createObjectURL(data);
         hrefFile.href = burl;

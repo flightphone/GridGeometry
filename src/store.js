@@ -17,7 +17,7 @@ if (window.electronAPI) //26.03.2025
 
 
 let mainObj = {
-    jsonData: false,
+    jsonData: true,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {
