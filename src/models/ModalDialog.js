@@ -9,6 +9,7 @@ class ModalDialog {
     constructor(height = "400", width = "600", okfun = () => { this.close() }, al = false) {
         this.height = height;
         this.width = width;
+        this.maximaze = false;
         /*
         class="ag-panel ag-default-panel ag-dialog ag-ltr ag-popup-child ag-focus-managed"
         */
@@ -17,6 +18,32 @@ class ModalDialog {
         this.dialog.style.width = `${this.width}`;
         this.dialog.style.padding = "0px";
         let modalDialog = creatediv("modalDialog", this.dialog);
+
+
+        let title = creatediv("titlePanel", modalDialog);
+        let maxbat = creatediv("titleButton", title);
+        let closebat = creatediv("titleButton", title);
+        maxbat.innerHTML = "&#128470;"
+        closebat.innerHTML = "&#10005;"
+
+        closebat.onclick = (e) => {
+            this.dialog.close();
+        }
+
+        maxbat.onclick = (e) => {
+            if (this.maximaze) {
+                this.dialog.style.height = `${this.height}`;
+                this.dialog.style.width = `${this.width}`;
+                this.maximaze = false;
+            }
+            else {
+                this.dialog.style.height = `100%`;
+                this.dialog.style.width = `100%`;
+                this.maximaze = true;
+            }
+        }
+
+
         this.content = creatediv("contentDialog", modalDialog)
         let dialogPanel = creatediv("dialogPanel", modalDialog);
         let dialogButton1 = creatediv("dialogButton", dialogPanel);
@@ -30,10 +57,6 @@ class ModalDialog {
             cancelbut.textContent = "Cancel";
             cancelbut.onclick = () => this.close();
         }
-
-
-
-
 
     }
 }

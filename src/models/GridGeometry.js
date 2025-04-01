@@ -98,7 +98,8 @@ class GridGeometry {
             for (let par in extparams.gridOptions)
                 this.gridOptions[par] = extparams.gridOptions[par];
         }
-        this.gridApi = createGrid(el, this.gridOptions);
+        if (el)
+            this.gridApi = createGrid(el, this.gridOptions);
     }
 
     start = async () => {

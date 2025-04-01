@@ -99,7 +99,9 @@
 
     mainObj.alert = (text, title = "message") => {
       //<div><h8>${title}</h8></div>
-      alertdialog.content.innerHTML = `<div><h7>${title}</h7></div><div class="content-dialog">
+      //<div><h7>${title}</h7></div>
+      alertdialog.content.innerHTML = `
+      <div class="content-dialog">
       <h5>${text}</h5>
       </div>
       `;
@@ -193,29 +195,33 @@
     </div>
   {/if}
 
-  <dialog bind:this={dialog} class="modal">
+  <dialog bind:this={dialog} class="modal" style="height:100%;width:100%">
+    <!--
     <div
       style="display:flex; flex-direction: column; align-items: center;width:100%"
     >
-      <!--
-      <div
+    -->
+    <div class="modalDialog">
+      
+      <div class="titleButton"
         style="position: absolute; right:10px; top:10px;"
         on:click={closeModal}
       >
-        <button>&#10005;</button>
+        &#10005;
       </div>
-      -->
-      <div class="mdl-card__title">
-        <h4 class="mdl-card__title-text">{title}</h4>
+      
+      <div>
+      <!--<div class="titlePanel" style="justify-content:start;height:30px">-->
+        <div style="margin-left: 25px;"><h4>{title}</h4></div>
       </div>
 
       <div
         bind:this={treediv}
-        style="flex-grow: 1; overflow-y: auto;height:400px;width:100%; margin:5px;border 1px solid lightgray;"
+        style="flex-grow: 1; overflow-y: auto;align-items: center;height:100%;width:calc(100%-20px);margin-left:20px;"
       ></div>
 
       <!--class="mdl-card__actions mdl-card--border"-->
-
+<!--
       <div
         
         class="mdl-card__actions mdl-card--border"
@@ -230,13 +236,10 @@
           </button>
         </div>
       </div>
+      -->
     </div>
   </dialog>
-  <!--
-  <div style="width:95%; height:300px">
-  <CargoPost QD_PK="F3053171-EBE8-47EC-9D4E-1CF6309862F5"></CargoPost>
-   </div>
--->
+ 
 
   {#each opens as e}
     <div hidden={e != currentActive}>

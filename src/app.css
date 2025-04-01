@@ -189,7 +189,7 @@ body {
 .contentDialog {
   margin: 3px;
   flex-grow: 1;
-  height: calc(100% - 60px);
+  height: calc(100% - 95px);
   /*border: 1px solid lightgray;*/
 
 }
@@ -203,6 +203,24 @@ body {
   margin: 3px;
   border: 1px solid lightgray;
   border-radius: 3px;
+}
+
+
+.titlePanel {
+  display: flex;
+  flex-direction: row;
+  justify-content:end;
+  align-items: center;
+  height: 30px;
+  padding-right: 10px;
+  border: 1px solid lightgray;
+  border-radius: 3px;
+}
+.titleButton
+{
+  margin-left: 10px;
+  margin-right: 5px;
+  cursor: pointer;
 }
 
 .dialogButton {
