@@ -64,8 +64,8 @@
   };
 </script>
 
-<a bind:this={href} href={url} style="display: none;" target="_blank"></a>
-<a bind:this={hrefFile} href="#" style="display: none;" target="_blank"></a>
+<a bind:this={href} href={url} style="display: none;" target="_blank">excel</a>
+<a bind:this={hrefFile} href="#" style="display: none;" target="_blank">file</a>
 <MonoGrid {IdDeclare} {extparams}>
   <div class="but" title="Print">
     {#if print}

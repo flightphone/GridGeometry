@@ -1,4 +1,4 @@
-const prodaction = false;
+const prodaction = true;
 const back_url = 'http://localhost:1793';
 
 let openMap = new Map();
@@ -17,7 +17,7 @@ if (window.electronAPI) //26.03.2025
 
 
 let mainObj = {
-    jsonData: false,
+    jsonData: true,
     baseUrl: ((prodaction) ? '' : back_url),
 
     getForm: (id, link1, params) => {
